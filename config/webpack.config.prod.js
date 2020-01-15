@@ -19,7 +19,7 @@ module.exports = webpackMerge(baseConfig, {
       filename: 'index.js',
       path: path.join(__dirname, '../dist'),
       publicPath: '/',
-      libraryTarget: 'umd'
+      libraryTarget: 'commonjs2'
   },
   module: {
     rules: [
