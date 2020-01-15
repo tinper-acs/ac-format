@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>组件名称</title>
+    <title>ac-format</title>
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap.css"/>
     <link type="text/css" rel="stylesheet" href="assets/css/bootstrap-responsive.css"/>
     <link type="text/css" rel="stylesheet" href="assets/css/pilcrow.css"/>
@@ -14,27 +14,118 @@
   <div class="container-fluid">
     <div class="row-fluid">
       <div class="span3"><ul class="nav nav-list">
-    <li class="sidebar-header-1"><a href="#组件名称">组件名称</a></li>
-    <li class="sidebar-header-2"><a href="#何时使用">何时使用</a></li>
+    <li class="sidebar-header-1"><a href="#ac-format">ac-format</a></li>
     <li class="sidebar-header-2"><a href="#如何使用">如何使用</a></li>
-    <li class="sidebar-header-2"><a href="#代码演示">代码演示</a></li>
+    <li class="sidebar-header-3"><a href="#cnd-标签使用">cnd 标签使用</a></li>
+    <li class="sidebar-header-3"><a href="#转换规则如下">转换规则如下</a></li>
+    <li class="sidebar-header-3"><a href="#示例">示例</a></li>
     <li class="sidebar-header-2"><a href="#api">API</a></li>
     <li class="sidebar-header-2"><a href="#注意事项">注意事项</a></li>
     <li class="sidebar-header-2"><a href="#更新日志">更新日志</a></li>
 </ul>
       </div>
-      <div class="span9 main"><h1 id="组件名称">组件名称</h1>
-<h2 id="何时使用">何时使用</h2>
-<h2 id="如何使用">如何使用</h2>
-<pre class="hljs"><code></code></pre><h2 id="代码演示">代码演示</h2>
-<h2 id="api">API</h2>
+      <div class="span9 main"><h1 id="ac-format">ac-format</h1>
+<pre class="hljs"><code>针对多格式，进行转换输出<span class="hljs-selector-tag">sdk</span>，目前只提供一个<span class="hljs-selector-tag">api</span>。 <span class="hljs-selector-tag">bee-input-number</span>&gt;2<span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.11</span> </code></pre><h2 id="如何使用">如何使用</h2>
+<pre class="hljs"><code>
+  安装
+  ynpm install ac-format --save
+
+  引入
+  <span class="hljs-keyword">import</span> formatNumber <span class="hljs-keyword">from</span> <span class="hljs-string">"ac-format"</span>; 
+
+  使用 
+  ...
+
+ formatNumber.formatNumber()
+</code></pre><h3 id="cnd-标签使用">cnd 标签使用</h3>
+<pre class="hljs"><code>  &lt;script src=<span class="hljs-string">"//design.yonyoucloud.com/static/tinper-bee/latest/ac-format/dist/index.js"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre><h3 id="转换规则如下">转换规则如下</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align:left">参数</th>
+<th>分量</th>
+<th>数字的显示方式</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>表示一个数字，被格式化数值不够的位数会补0</td>
+<td>7、8 等</td>
+<td></td>
+</tr>
+<tr>
+<td>#</td>
+<td>表示一个数字，被格式化数值不够的位数会忽略</td>
+<td>07、08 等</td>
+<td></td>
+</tr>
+<tr>
+<td>[.]</td>
+<td>小数点分隔符的占位符，由方括号标记，方括号里的字符用来标记小数点</td>
+<td>, . 等</td>
+<td></td>
+</tr>
+<tr>
+<td>%</td>
+<td>前缀或后缀，将数值乘以100并显示为百分数</td>
+<td>#[.]##%，%#[.]##</td>
+<td></td>
+</tr>
+<tr>
+<td>\u2030</td>
+<td>前缀或后缀，将数值乘以1000并显示为千分数</td>
+<td>#[.]##\u2030</td>
+<td></td>
+</tr>
+<tr>
+<td>\u00A4</td>
+<td>前缀或后缀，货币记号，由货币号替换。</td>
+<td></td>
+</tr>
+<tr>
+<td>E</td>
+<td>科学计数法，根据前面的表达式计算有效位数，将结果按科学计数法表示一般使用E0，而不能使用E#</td>
+<td>#[.]##E0</td>
+</tr>
+<tr>
+<td>‘</td>
+<td>单引号，转义字符，如果在结果中需要拼接特殊字符，需要将其包含在单引号中</td>
+<td>&#39;#&#39;#</td>
+</tr>
+<tr>
+<td>(</td>
+<td>前缀，使用这个符号代表负数需要用括号来表示，与+不能同时出现</td>
+<td>-3.14表示成(3.14)</td>
+</tr>
+<tr>
+<td>+</td>
+<td>正负号的符号位，与(不能同时出现</td>
+<td>+ ###，###[.]####</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="示例">示例</h3>
+<pre class="hljs"><code>
+
+以 <span class="hljs-number">-10000003.1415926</span>为例
+
++ ###,###[.]####  =  - <span class="hljs-number">10000</span>,<span class="hljs-number">003.1416</span>
+
+###,###,###[.]####### +  =  <span class="hljs-number">10</span>,<span class="hljs-number">000</span>,<span class="hljs-number">003.1415926</span> -
+
+(### ### ###[,]####### = (<span class="hljs-number">10</span> <span class="hljs-number">000</span> <span class="hljs-number">003</span>,<span class="hljs-number">1415926</span>)    
+
+(#.####.####[,]####### = (<span class="hljs-number">1000.0003</span>,<span class="hljs-number">1415926</span>)  
+</code></pre><h2 id="api">API</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">API</th>
 <th style="text-align:center">说明</th>
 <th style="text-align:center">类型</th>
-<th style="text-align:right">默认值</th>
+<th style="text-align:right">默认值/参数</th>
 </tr>
 </thead>
 <tbody>
@@ -43,8 +134,12 @@
 </tr>
 </tbody>
 </table>
-<h2 id="注意事项">注意事项</h2>
-<p>暂无</p>
+<p>formatNumber             |多格式转换   |function(格式,值)| </p>
+<pre class="hljs"><code>
+
+formatNumber(<span class="hljs-string">"+ ###,###[.]####"</span>, <span class="hljs-number">123456789.123</span>) 
+</code></pre><h2 id="注意事项">注意事项</h2>
+<p>  bee-input-number&gt;2.2.11 </p>
 <h2 id="更新日志">更新日志</h2>
       </div>
     </div>

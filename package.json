@@ -46,7 +46,7 @@
     "bee-drawer": "0.0.2",
     "bee-layout": "latest",
     "bee-panel": "latest",
-    "bee-input-number": "^2.2.9",
+    "bee-input-number": "^2.2.11",
     "bee-timepicker": "^2.0.11",
     "bee-datepicker": "^2.3.10",
     "css-loader": "^1.0.0",

@@ -19,7 +19,7 @@ module.exports = webpackMerge(baseConfig, {
       filename: 'index.js',
       path: path.join(__dirname, '../dist'),
       publicPath: '/',
-      libraryTarget: 'commonjs2'
+      libraryTarget: 'umd'
   },
   module: {
     rules: [
@@ -67,11 +67,11 @@ module.exports = webpackMerge(baseConfig, {
     //   name: 'manifest'
     // },
     minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true
-      }),
+      // new UglifyJsPlugin({
+      //   cache: true,
+      //   parallel: true,
+      //   sourceMap: true
+      // }),
       new OptimizeCSSAssetsPlugin({})  // use OptimizeCSSAssetsPlugin
     ], // [new UglifyJsPlugin({...})]
     // splitChunks:{

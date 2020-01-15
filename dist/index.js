@@ -1,1 +1,379 @@
-module.exports=function(e){var r={};function t(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,t),o.l=!0,o.exports}return t.m=e,t.c=r,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:n})},t.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},t.t=function(e,r){if(1&r&&(e=t(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var n=Object.create(null);if(t.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var o in e)t.d(n,o,function(r){return e[r]}.bind(null,o));return n},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="/",t(t.s=0)}([function(e,r,t){"use strict";r.__esModule=!0,r.formatNumber=void 0;var n=function(e){return e&&e.__esModule?e:{default:e}}(t(1));"undefined"!=typeof reactHotLoaderGlobal&&reactHotLoaderGlobal.default.signature;r.formatNumber=n.default},function(e,r,t){"use strict";(function(e){!function(){var r="undefined"!=typeof reactHotLoaderGlobal?reactHotLoaderGlobal.enterModule:void 0;r&&r(e)}();"undefined"!=typeof reactHotLoaderGlobal&&reactHotLoaderGlobal.default.signature;var r=/[0-9\-+#]/,t=/[^\d\-+#]/g;function n(e){return e.search(r)}function o(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"#.##",r={},o=e.length,a=n(e);r.prefix=a>0?e.substring(0,a):"";var i=n(e.split("").reverse().join("")),s=o-i,u=e.substring(s,s+1),l=s+("."===u||","===u?1:0);r.suffix=i>0?e.substring(l,o):"",r.mask=e.substring(a,l),r.maskHasNegativeSign="-"===r.mask.charAt(0),r.maskHasPositiveSign="+"===r.mask.charAt(0);var f=r.mask.match(t);return r.decimal=f&&f[f.length-1]||".",r.separator=f&&f[1]&&f[0]||",",f=r.mask.split(r.decimal),r.integer=f[0],r.fraction=f[1],r}function a(e,r,t){var n=!1,o={value:e};e<0&&(n=!0,o.value=-o.value),o.sign=n?"-":"",o.value=Number(o.value).toFixed(r.fraction&&r.fraction.length),o.value=Number(o.value).toString();var a=r.fraction&&r.fraction.lastIndexOf("0"),s=o.value.split("."),u=s[0],l=void 0===u?"0":u,f=s[1],c=void 0===f?"":f;return(!c||c&&c.length<=a)&&(c=a<0?"":Number("0."+c).toFixed(a+1).replace("0.","")),o.integer=l,o.fraction=c,i(o,r),"0"!==o.result&&""!==o.result||(n=!1,o.sign=""),!n&&r.maskHasPositiveSign?o.sign="+":n&&r.maskHasPositiveSign?o.sign="-":n&&(o.sign=t&&t.enforceMaskSign&&!r.maskHasNegativeSign?"":"-"),o}function i(e,r){e.result="";var t=r.integer.split(r.separator),n=t.join(""),o=n&&n.indexOf("0");if(o>-1)for(;e.integer.length<n.length-o;)e.integer="0"+e.integer;else 0===Number(e.integer)&&(e.integer="");var a=t[1]&&t[t.length-1].length;if(a)for(var i=e.integer.length,s=i%a,u=0;u<i;u++)e.result+=e.integer.charAt(u),!((u-s+1)%a)&&u<i-a&&(e.result+=r.separator);else e.result=e.integer;return e.result+=r.fraction&&e.fraction?r.decimal+e.fraction:"",e}e.exports=function(e,r){var t=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};if(!e||isNaN(Number(r)))return r;var n=o(e),i=a(r,n,t);return n.prefix+i.sign+i.result+n.suffix},function(){var e="undefined"!=typeof reactHotLoaderGlobal?reactHotLoaderGlobal.default:void 0;e&&(e.register(r,"maskRegex","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"),e.register(t,"notMaskRegex","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"),e.register(n,"getIndex","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"),e.register(o,"processMask","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"),e.register(a,"processValue","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"),e.register(i,"addSeparators","/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js"))}(),function(){var r="undefined"!=typeof reactHotLoaderGlobal?reactHotLoaderGlobal.leaveModule:void 0;r&&r(e)}()}).call(this,t(2)(e))},function(e,r){e.exports=function(e){return e.webpackPolyfill||(e.deprecate=function(){},e.paths=[],e.children||(e.children=[]),Object.defineProperty(e,"loaded",{enumerable:!0,get:function(){return e.l}}),Object.defineProperty(e,"id",{enumerable:!0,get:function(){return e.i}}),e.webpackPolyfill=1),e}}]);
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else {
+		var a = factory();
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(window, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "/";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+
+exports.__esModule = true;
+exports.formatNumber = undefined;
+
+var _formatNumber = __webpack_require__(2);
+
+var _formatNumber2 = _interopRequireDefault(_formatNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(function () {
+    var enterModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.enterModule : undefined;
+    enterModule && enterModule(module);
+})();
+
+var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default.signature : function (a) {
+    return a;
+};
+
+var formatNumber = function formatNumber(format, value) {
+    format = format.replace("[", "").replace("]", ""); //规范分隔符
+    format = format.replace("(", "+"); //规范负数
+
+    var after = "",
+        before = "";
+    if (format.substring(format.length - 1, format.length) === "+") {
+        after = "-";
+    } else if (format.substring(0, 1) === "+") {
+        before = "-";
+    }
+    if (after === "-" && before === "-") {
+        after = "";
+        console.log("format is error !");
+    }
+    format = format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "");
+    value = (0, _formatNumber2.default)(format, value);
+    return before + value + after;
+};
+
+exports.formatNumber = formatNumber;
+;
+
+(function () {
+    var reactHotLoader = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default : undefined;
+
+    if (!reactHotLoader) {
+        return;
+    }
+
+    reactHotLoader.register(formatNumber, "formatNumber", "/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js");
+})();
+
+;
+
+(function () {
+    var leaveModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.leaveModule : undefined;
+    leaveModule && leaveModule(module);
+})();
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)(module)))
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+
+(function () {
+	var enterModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.enterModule : undefined;
+	enterModule && enterModule(module);
+})();
+
+var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default.signature : function (a) {
+	return a;
+};
+
+var maskRegex = /[0-9\-+#]/;
+var notMaskRegex = /[^\d\-+#]/g;
+
+function getIndex(mask) {
+	return mask.search(maskRegex);
+}
+
+function processMask() {
+	var mask = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "#.##";
+
+	var maskObj = {};
+	var len = mask.length;
+	var start = getIndex(mask);
+	maskObj.prefix = start > 0 ? mask.substring(0, start) : "";
+
+	// Reverse string: not an ideal method if there are surrogate pairs
+	var end = getIndex(mask.split("").reverse().join(""));
+	var offset = len - end;
+	var substr = mask.substring(offset, offset + 1);
+	// Add 1 to offset if mask has a trailing decimal/comma
+	var indx = offset + (substr === "." || substr === "," ? 1 : 0);
+	maskObj.suffix = end > 0 ? mask.substring(indx, len) : "";
+
+	maskObj.mask = mask.substring(start, indx);
+	maskObj.maskHasNegativeSign = maskObj.mask.charAt(0) === "-";
+	maskObj.maskHasPositiveSign = maskObj.mask.charAt(0) === "+";
+
+	// Search for group separator & decimal; anything not digit,
+	// not +/- sign, and not #
+	var result = maskObj.mask.match(notMaskRegex);
+	// Treat the right most symbol as decimal
+	maskObj.decimal = result && result[result.length - 1] || ".";
+	// Treat the left most symbol as group separator
+	maskObj.separator = result && result[1] && result[0] || ",";
+
+	// Split the decimal for the format string if any
+	result = maskObj.mask.split(maskObj.decimal);
+	maskObj.integer = result[0];
+	maskObj.fraction = result[1];
+	return maskObj;
+}
+
+function processValue(value, maskObj, options) {
+	var isNegative = false;
+	var valObj = {
+		value: value
+	};
+	if (value < 0) {
+		isNegative = true;
+		// Process only abs(), and turn on flag.
+		valObj.value = -valObj.value;
+	}
+
+	valObj.sign = isNegative ? "-" : "";
+
+	// Fix the decimal first, toFixed will auto fill trailing zero.
+	valObj.value = Number(valObj.value).toFixed(maskObj.fraction && maskObj.fraction.length);
+	// Convert number to string to trim off *all* trailing decimal zero(es)
+	valObj.value = Number(valObj.value).toString();
+
+	// Fill back any trailing zero according to format
+	// look for last zero in format
+	var posTrailZero = maskObj.fraction && maskObj.fraction.lastIndexOf("0");
+
+	var _valObj$value$split = valObj.value.split("."),
+	    _valObj$value$split$ = _valObj$value$split[0],
+	    valInteger = _valObj$value$split$ === undefined ? "0" : _valObj$value$split$,
+	    _valObj$value$split$2 = _valObj$value$split[1],
+	    valFraction = _valObj$value$split$2 === undefined ? "" : _valObj$value$split$2;
+
+	if (!valFraction || valFraction && valFraction.length <= posTrailZero) {
+		valFraction = posTrailZero < 0 ? "" : Number("0." + valFraction).toFixed(posTrailZero + 1).replace("0.", "");
+	}
+
+	valObj.integer = valInteger;
+	valObj.fraction = valFraction;
+	addSeparators(valObj, maskObj);
+
+	// Remove negative sign if result is zero
+	if (valObj.result === "0" || valObj.result === "") {
+		// Remove negative sign if result is zero
+		isNegative = false;
+		valObj.sign = "";
+	}
+
+	if (!isNegative && maskObj.maskHasPositiveSign) {
+		valObj.sign = "+";
+	} else if (isNegative && maskObj.maskHasPositiveSign) {
+		valObj.sign = "-";
+	} else if (isNegative) {
+		valObj.sign = options && options.enforceMaskSign && !maskObj.maskHasNegativeSign ? "" : "-";
+	}
+
+	return valObj;
+}
+
+function addSeparators(valObj, maskObj) {
+	valObj.result = "";
+	// Look for separator
+	var szSep = maskObj.integer.split(maskObj.separator);
+	// Join back without separator for counting the pos of any leading 0
+	var maskInteger = szSep.join("");
+
+	var posLeadZero = maskInteger && maskInteger.indexOf("0");
+	if (posLeadZero > -1) {
+		while (valObj.integer.length < maskInteger.length - posLeadZero) {
+			valObj.integer = "0" + valObj.integer;
+		}
+	} else if (Number(valObj.integer) === 0) {
+		valObj.integer = "";
+	}
+
+	// Process the first group separator from decimal (.) only, the rest ignore.
+	// get the length of the last slice of split result.
+	var posSeparator = szSep[1] && szSep[szSep.length - 1].length;
+	if (posSeparator) {
+		var len = valObj.integer.length;
+		var offset = len % posSeparator;
+		for (var indx = 0; indx < len; indx++) {
+			valObj.result += valObj.integer.charAt(indx);
+			// -posSeparator so that won't trail separator on full length
+			if (!((indx - offset + 1) % posSeparator) && indx < len - posSeparator) {
+				valObj.result += maskObj.separator;
+			}
+		}
+	} else {
+		valObj.result = valObj.integer;
+	}
+
+	valObj.result += maskObj.fraction && valObj.fraction ? maskObj.decimal + valObj.fraction : "";
+	return valObj;
+}
+
+module.exports = function (mask, value) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	if (!mask || isNaN(Number(value))) {
+		// Invalid inputs
+		return value;
+	}
+
+	var maskObj = processMask(mask);
+	var valObj = processValue(value, maskObj, options);
+	return maskObj.prefix + valObj.sign + valObj.result + maskObj.suffix;
+};
+;
+
+(function () {
+	var reactHotLoader = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.default : undefined;
+
+	if (!reactHotLoader) {
+		return;
+	}
+
+	reactHotLoader.register(maskRegex, "maskRegex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(notMaskRegex, "notMaskRegex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(getIndex, "getIndex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(processMask, "processMask", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(processValue, "processValue", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(addSeparators, "addSeparators", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+})();
+
+;
+
+(function () {
+	var leaveModule = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoaderGlobal.leaveModule : undefined;
+	leaveModule && leaveModule(module);
+})();
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(0)(module)))
+
+/***/ })
+/******/ ]);
+});
