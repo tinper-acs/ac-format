@@ -1,4 +1,5 @@
 import formatnumber from './formatNumber';
+import moment from 'moment';
 
 const formatNumber = (format,value)=>{
     format = format.replace("[","").replace("]","");//规范分隔符
@@ -19,6 +20,24 @@ const formatNumber = (format,value)=>{
     return before+value+after;
 }
 
+const getOffsetMinute = (val)=>{
+    if(val.indexOf("UTC") == -1)return;
+    let sym = val.indexOf("+") != -1?"+":"-";
+    let utc = val.split(sym)[1];
+    let utcMinute = Number(utc.split(":")[0]) * 60 + Number(utc.split(":")[1]);
+    return Number(sym + utcMinute);
+}
+
+const getMomentFromUTC = (value,utc) => { 
+    return moment(value).utcOffset(getOffsetMinute(utc));//.format(format);
+}
+
+const getStringFromUTC = (value,utc,format) => { 
+    return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
+}
+
 export {
-    formatNumber
+    formatNumber,
+    getMomentFromUTC,
+    getStringFromUTC
 };
