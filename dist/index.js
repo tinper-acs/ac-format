@@ -16822,23 +16822,35 @@ var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoader
 };
 
 var formatNumber = function formatNumber(format, value) {
+    var b = false,
+        after = "",
+        before = "";
+    if (String(value).indexOf('-') != -1) {
+        b = true;
+        value = Number(String(value).replace("-", ""));
+    } else {
+        value = Number(value);
+    }
     format = format.replace("[", "").replace("]", ""); //规范分隔符
     format = format.replace("(", "+"); //规范负数
-
-    var after = "",
-        before = "";
-    if (format.substring(format.length - 1, format.length) === "+") {
-        after = "-";
-    } else if (format.substring(0, 1) === "+") {
-        before = "-";
+    if (b) {
+        if (format.substring(format.length - 1, format.length) === "+") {
+            after = "-";
+        } else if (format.substring(0, 1) === "+") {
+            before = "-";
+        }
+        if (after === "-" && before === "-") {
+            after = "";
+            console.log("format is error !");
+        }
     }
-    if (after === "-" && before === "-") {
-        after = "";
-        console.log("format is error !");
-    }
-    format = format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "");
+    format = format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "").replace(" ", "");
     value = (0, _formatNumber2.default)(format, value);
-    return before + value + after;
+    if (b) {
+        return before + value + after;
+    } else {
+        return value;
+    }
 };
 
 var getOffsetMinute = function getOffsetMinute(val) {

@@ -2,22 +2,33 @@ import formatnumber from './formatNumber';
 import moment from 'moment';
 
 const formatNumber = (format,value)=>{
+    let b = false,after = "",before = ""
+    if(String(value).indexOf('-')!=-1){
+        b = true;
+        value = Number(String(value).replace("-",""));
+    }else{
+        value = Number(value);
+    }
     format = format.replace("[","").replace("]","");//规范分隔符
     format = format.replace("(","+");//规范负数
-    
-    let after = "",before = "";
-    if(format.substring(format.length-1,format.length) === "+"){
-        after = "-";
-    }else  if(format.substring(0,1) === "+"){
-        before = "-"
+    if(b){
+        if(format.substring(format.length-1,format.length) === "+"){
+            after = "-";
+        }else  if(format.substring(0,1) === "+"){
+            before = "-"
+        }
+        if(after === "-" && before === "-"){
+            after = "";
+            console.log("format is error !");
+        }
     }
-    if(after === "-" && before === "-"){
-        after = "";
-        console.log("format is error !");
-    }
-    format = format.replace(" +","").replace("+","").replace("+ ","").replace("+","").replace("(","");
+    format = format.replace(" +","").replace("+","").replace("+ ","").replace("+","").replace("(","").replace(" ","");
     value = formatnumber(format,value);
-    return before+value+after;
+    if(b){
+        return before+value+after;
+    }else{
+        return value;
+    }
 }
 
 const getOffsetMinute = (val)=>{

@@ -13,30 +13,39 @@ import InputNumber from 'bee-input-number';
 class Demo3 extends Component {
     constructor(props) {
         super(props);
+        let value = '-10000003.1415926',
+        value1 = '10000003.1415926';
+
         this.state = {
-            value: '10000003.1415926',
-            value1: '10000003.1415926',
-            value2: '10000003.1415926',
-            value2: '10000003.1415926'
+            value,
+            value1:value,
+            value2:value1,
+            value3:value1,
         }
     }
 
     render() {
+        // const {value,value1,value2,value3} = this.state;
         return (
             <div className="demoPadding">
                 <span>示例</span>
                 <div>
                     + ###,###[.]####
-                     <InputNumber iconStyle="one" value={10000003.1415926} format={value => `${formatNumber("+ ###,###[.]####", value)}`} onFocus={(value, e) => { this.setState({ value }) }} /> <br />
+                     <InputNumber iconStyle="one" value={this.state.value} format={value => `${formatNumber("+ ###,###[.]####", value)}`} onFocus={(value, e) => { this.setState({ value }) }} /> <br />
 
                     ####,####,####[.]####### +
-                    <InputNumber iconStyle="one" value={10000003.1415926} format={value => `${formatNumber("####,####,####[.]####### +", value)}`} onFocus={(value1, e) => { this.setState({ value1 }) }} /> <br />
+                    <InputNumber iconStyle="one" value={this.state.value1} 
+                    format={value => formatNumber("####,####,####[.]########### +", value)}
+                    minusRight={true}
+                    onFocus={(value1, e) => this.setState({ value1 })}
+                    onBlur={(value1, e) =>this.setState({ value1 })}
+                    /> <br />
 
                     (### ### ###[,]#######
-                    <InputNumber iconStyle="one" value={10000003.1415926} format={value => `${formatNumber("(### ### ###[,]#######", value)}`} onFocus={(value2, e) => { this.setState({ value2 }) }} /> <br />
+                    <InputNumber iconStyle="one" value={this.state.value2} format={value => `${formatNumber("(### ### ###[,]#######", value)}`} onFocus={(value2, e) => { this.setState({ value2 }) }} /> <br />
 
                     (#.####.####[,]#######
-                    <InputNumber iconStyle="one" value={10000003.1415926} format={value => `${formatNumber("(#.####.####[,]#######", value)}`} onFocus={(value3, e) => { this.setState({ value3 }) }} /> <br />
+                    <InputNumber iconStyle="one" value={this.state.value3} format={value => `${formatNumber("(#.####.####[,]#######", value)}`} onFocus={(value3, e) => { this.setState({ value3 }) }} /> <br />
 
                     <br />
                 </div>
