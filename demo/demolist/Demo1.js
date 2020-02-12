@@ -21,6 +21,7 @@ class Demo3 extends Component {
             value1:value,
             value2:value1,
             value3:value1,
+            value4:value,
         }
     }
 
@@ -37,6 +38,7 @@ class Demo3 extends Component {
                     <InputNumber iconStyle="one" value={this.state.value1} 
                     format={value => formatNumber("####,####,####[.]########### +", value)}
                     minusRight={true}
+                    precision={3}
                     onFocus={(value1, e) => this.setState({ value1 })}
                     onBlur={(value1, e) =>this.setState({ value1 })}
                     /> <br />
@@ -46,6 +48,9 @@ class Demo3 extends Component {
 
                     (#.####.####[,]#######
                     <InputNumber iconStyle="one" value={this.state.value3} format={value => `${formatNumber("(#.####.####[,]#######", value)}`} onFocus={(value3, e) => { this.setState({ value3 }) }} /> <br />
+
+                    + ###,###[.]#### 设置 precision :
+                     <InputNumber iconStyle="one" precision={3} value={this.state.value4} format={value => `${formatNumber("+ ###,###[.]####", value)}`} onFocus={(value, e) => { this.setState({ value }) }} /> <br />
 
                     <br />
                 </div>
