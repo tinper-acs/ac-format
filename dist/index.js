@@ -16869,8 +16869,7 @@ var getPrecFormat = function getPrecFormat(format, value, b) {
     var sp = format.indexOf("]");
     if (sp === -1) {
         console.log(format + " format is error , setting  defaultFormat: " + defaultFormat);
-        var prce = numberFormat.substring(0, getPrecLen(defaultFormat, value));
-        return defaultFormat.split("]")[0] + "]" + prce;
+        format = defaultFormat;
     }
     var r = format.split("]")[1].indexOf("+") !== -1 && b ? " +" : "";
     var precV = value.indexOf(".") !== -1 ? value.split(".")[1] : ""; //返回小数位的数据
