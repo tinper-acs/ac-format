@@ -48,8 +48,7 @@ const getPrecFormat = (format,value,b)=>{
     let sp = format.indexOf("]");
     if(sp === -1){
         console.log(format+" format is error , setting  defaultFormat: "+defaultFormat);
-        let prce = numberFormat.substring(0,getPrecLen(defaultFormat,value));
-        return defaultFormat.split("]")[0]+"]" + prce;
+        format = defaultFormat;
     }
     let r = format.split("]")[1].indexOf("+") !== -1 && b?" +":"";
     let precV = value.indexOf(".") !== -1?value.split(".")[1]:"";//返回小数位的数据
