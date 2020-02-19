@@ -1,6 +1,6 @@
 {
   "name": "ac-format",
-  "version": "0.0.6",
+  "version": "0.0.8",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "bee-clipboard": "^2.0.2",
     "bee-datepicker": "^2.3.10",
     "bee-drawer": "0.0.2",
-    "bee-input-number": "^2.2.14",
+    "bee-input-number": "^2.2.19",
     "bee-layout": "latest",
     "bee-panel": "latest",
     "bee-timepicker": "^2.0.11",

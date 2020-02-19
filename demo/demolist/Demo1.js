@@ -17,11 +17,12 @@ class Demo3 extends Component {
         value1 = '10000003.1415926';
 
         this.state = {
-            value,
-            value1:value,
+            value:'-103423003.1415926',
+            value1:'-10000003.1415926',
             value2:value1,
             value3:value1,
             value4:value,
+            value7:-0.123456789,
         }
     }
 
@@ -32,7 +33,25 @@ class Demo3 extends Component {
                 <span>示例</span>
                 <div>
                     + ###,###[.]####
-                     <InputNumber iconStyle="one" value={this.state.value} format={value => `${formatNumber("+ ###,###[.]####", value)}`} onFocus={(value, e) => { this.setState({ value }) }} /> <br />
+                     <InputNumber iconStyle="one"
+                        min = '-9007199254740990'
+                        max = '9007199254740990'
+                        precision={3}
+                     value={this.state.value} format={value => `${formatNumber("####.####[,]#### +", value)}`} 
+                     
+                     onFocus={(value, e) => this.setState({ value })}
+                     onBlur={(value, e) =>this.setState({ value })}
+                     /> <br />
+ 
+                    (#,####,####[,]#### +
+                     <InputNumber iconStyle="one"
+                        min = '-9007199254740990'
+                        max = '9007199254740990'
+                        // precision={3}
+                     value={this.state.value7} format={value => `${formatNumber("####.####[,]#### +", value)}`} 
+                     onFocus={(value7, e) => this.setState({ value7 })}
+                     onBlur={(value7, e) =>this.setState({ value7 })}
+                     /> <br />
 
                     ####,####,####[.]####### +
                     <InputNumber iconStyle="one" value={this.state.value1} 
@@ -44,13 +63,20 @@ class Demo3 extends Component {
                     /> <br />
 
                     (### ### ###[,]#######
-                    <InputNumber iconStyle="one" value={this.state.value2} format={value => `${formatNumber("(### ### ###[,]#######", value)}`} onFocus={(value2, e) => { this.setState({ value2 }) }} /> <br />
+                    <InputNumber iconStyle="one"  precision={8} value={this.state.value2} format={value => `${formatNumber("(### ### ###[,]#######", value)}`} 
+                    onFocus={(value2, e) =>this.setState({value2})} onBlur={(value2, e) =>this.setState({ value2 })}
+                    /> <br />
 
                     (#.####.####[,]#######
-                    <InputNumber iconStyle="one" value={this.state.value3} format={value => `${formatNumber("(#.####.####[,]#######", value)}`} onFocus={(value3, e) => { this.setState({ value3 }) }} /> <br />
+                    <InputNumber iconStyle="one" value={this.state.value3} format={value => `${formatNumber("(#.####.####[,]#######", value)}`} 
+                      onFocus={(value3, e) =>this.setState({value3})} onBlur={(value3, e) =>this.setState({ value3 })}
+                     /> <br />
 
                     + ###,###[.]#### 设置 precision :
-                     <InputNumber iconStyle="one" precision={3} value={this.state.value4} format={value => `${formatNumber("+ ###,###[.]####", value)}`} onFocus={(value, e) => { this.setState({ value }) }} /> <br />
+                     <InputNumber iconStyle="one" precision={3} value={this.state.value4} format={value => `${formatNumber("+ ###,###[.]####", value)}`} 
+                     onFocus={(value4, e) => { this.setState({value4}) }} 
+                     onBlur={(value4, e) =>this.setState({ value4 })}
+                     /> <br />
 
                     <br />
                 </div>
