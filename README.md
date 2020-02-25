@@ -84,7 +84,7 @@ formatNumber("+ ###,###[.]####", 123456789.123)
 ```js
 
 
-import {  getMomentFromUTC, getStringFromUTC } from ac-format;
+import {  getTimezoneUTCDate } from ac-format;
 
 render(){
   let d = '2020/02/06,14:30:06';
