@@ -88,8 +88,10 @@ import {  getMomentFromUTC, getStringFromUTC } from ac-format;
 
 render(){
   let d = '2020/02/06,14:30:06';
-  value={getMomentFromUTC(new Date(d),"UTC-10:00")}\
-
+  value={getTimezoneUTCDate(new Date(d),"UTC-10:00")}
+  //返回Moment对象
+  value={getTimezoneUTCDate(new Date(d),"UTC-10:00")}
+  //返回时间字符串
   ...
 }
     

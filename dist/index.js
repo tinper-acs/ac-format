@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getStringFromUTC = exports.getMomentFromUTC = exports.formatNumber = undefined;
+exports.getTimezoneUTCDate = exports.formatNumber = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16933,17 +16933,20 @@ var getOffsetMinute = function getOffsetMinute(val) {
     return Number(sym + utcMinute);
 };
 
-var getMomentFromUTC = function getMomentFromUTC(value, utc) {
-    return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)); //.format(format);
-};
+exports.getTimezoneUTCDate = getTimezoneUTCDate = function getTimezoneUTCDate(value) {
+    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
+    var format = arguments[2];
 
-var getStringFromUTC = function getStringFromUTC(value, utc, format) {
-    return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)).format(format);
+    if (!value) return null;
+    if (format) {
+        return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)).format(format);
+    } else {
+        return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc));
+    }
 };
 
 exports.formatNumber = formatNumber;
-exports.getMomentFromUTC = getMomentFromUTC;
-exports.getStringFromUTC = getStringFromUTC;
+exports.getTimezoneUTCDate = getTimezoneUTCDate;
 ;
 
 (function () {
@@ -16962,8 +16965,6 @@ exports.getStringFromUTC = getStringFromUTC;
     reactHotLoader.register(getNegative, 'getNegative', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(formatNumber, 'formatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getOffsetMinute, 'getOffsetMinute', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
-    reactHotLoader.register(getMomentFromUTC, 'getMomentFromUTC', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
-    reactHotLoader.register(getStringFromUTC, 'getStringFromUTC', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
 })();
 
 ;
