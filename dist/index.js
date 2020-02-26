@@ -16913,7 +16913,6 @@ var formatNumber = function formatNumber(format, value) {
     var b = String(value).indexOf('-') != -1 ? true : false; //标记负数
 
     var _format = getPrecFormat(format, String(value), b);
-    console.log(" --_format- ", _format);
     value = b ? String(Number(String(value).replace('-', "")) * -1) : String(value);
     format = format.replace("(", "+"); //规范负数
 
@@ -16922,7 +16921,6 @@ var formatNumber = function formatNumber(format, value) {
     value = (0, _formatNumber2.default)(_format, value);
 
     var nage = getNegative(format, value);
-    console.log(" -nage- ", nage);
     return nage;
 };
 
@@ -16962,7 +16960,6 @@ var getTimeFormat = function getTimeFormat(value) {
     hours = hours < 0 ? hours + 24 : hours;
 
     hours = value.replace(values[0], hours);
-    console.log(" ==hours==== ", hours);
     return format ? (0, _moment2.default)(hours, format) : hours;
 };
 
