@@ -4,6 +4,7 @@ import moment from 'moment';
 const defaultFormat = '+ ###,###[.]####';
 const numberFormat = '0000000000000';
 const strFormat = '#############';
+const defaultUtc = 8;
 /**
  * 千分位的数量
  * @param {*} format  
@@ -90,7 +91,6 @@ const formatNumber = (format, value) => {
     let b = String(value).indexOf('-') != -1 ? true : false;//标记负数
 
     let _format = getPrecFormat(format, String(value), b);
-    console.log(" --_format- ", _format);
     value = b ? String(Number(String(value).replace('-', "")) * (-1)) : String(value);
     format = format.replace("(", "+");//规范负数
 
@@ -99,7 +99,6 @@ const formatNumber = (format, value) => {
     value = formatnumber(_format, value);
 
     let nage = getNegative(format, value);
-    console.log(" -nage- ", nage);
     return nage;
 }
 
@@ -120,7 +119,24 @@ const getDateFormat = (value, utc = 'UTC+8:00', format) => {
     }
 }
 
+const getTimeFormat = (value, utc = 'UTC+8:00', format) => {
+  if(value.indexOf(":") === -1)return value;
+  if (utc.indexOf("UTC") == -1) return value;
+  let sym = value.indexOf("+") != -1 ? "+" : "-";
+
+  let values = value.split(":");
+ 
+  let currUtc = Number((sym + utc.split(sym)[1].split(":")[0] ));
+ 
+  let hours = Number(values[0]) - (defaultUtc - currUtc);
+  hours = hours < 0?hours+24:hours;
+
+  hours =  value.replace(values[0],hours);
+  return format?moment(hours,format):hours;
+}
+
 export {
     formatNumber,
     getDateFormat,
+    getTimeFormat
 };

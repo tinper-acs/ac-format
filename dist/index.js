@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getDateFormat = exports.formatNumber = undefined;
+exports.getTimeFormat = exports.getDateFormat = exports.formatNumber = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16824,6 +16824,7 @@ var __signature__ = typeof reactHotLoaderGlobal !== 'undefined' ? reactHotLoader
 var defaultFormat = '+ ###,###[.]####';
 var numberFormat = '0000000000000';
 var strFormat = '#############';
+var defaultUtc = 8;
 /**
  * 千分位的数量
  * @param {*} format  
@@ -16945,8 +16946,29 @@ var getDateFormat = function getDateFormat(value) {
     }
 };
 
+var getTimeFormat = function getTimeFormat(value) {
+    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
+    var format = arguments[2];
+
+    if (value.indexOf(":") === -1) return value;
+    if (utc.indexOf("UTC") == -1) return value;
+    var sym = value.indexOf("+") != -1 ? "+" : "-";
+
+    var values = value.split(":");
+
+    var currUtc = Number(sym + utc.split(sym)[1].split(":")[0]);
+
+    var hours = Number(values[0]) - (defaultUtc - currUtc);
+    hours = hours < 0 ? hours + 24 : hours;
+
+    hours = value.replace(values[0], hours);
+    console.log(" ==hours==== ", hours);
+    return format ? (0, _moment2.default)(hours, format) : hours;
+};
+
 exports.formatNumber = formatNumber;
 exports.getDateFormat = getDateFormat;
+exports.getTimeFormat = getTimeFormat;
 ;
 
 (function () {
@@ -16959,6 +16981,7 @@ exports.getDateFormat = getDateFormat;
     reactHotLoader.register(defaultFormat, 'defaultFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(numberFormat, 'numberFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(strFormat, 'strFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(defaultUtc, 'defaultUtc', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getPrecisionLen, 'getPrecisionLen', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getDecimalFormat, 'getDecimalFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getPrecFormat, 'getPrecFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
@@ -16966,6 +16989,7 @@ exports.getDateFormat = getDateFormat;
     reactHotLoader.register(formatNumber, 'formatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getOffsetMinute, 'getOffsetMinute', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getDateFormat, 'getDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getTimeFormat, 'getTimeFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
 })();
 
 ;

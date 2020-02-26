@@ -81,16 +81,18 @@ formatNumber("+ ###,###[.]####", 123456789.123)
 
 多时区
 
+dateTpicker
+
 ```js
 
 
-import {  getTimezoneUTCDate } from ac-format;
+import {  getDateFormat } from ac-format;
 
 render(){
   let d = '2020/02/06,14:30:06';
-  value={getTimezoneUTCDate(new Date(d),"UTC-10:00")}
+  value={getTimezoneUTCDate(d,"UTC-10:00")}
   //返回Moment对象
-  value={getTimezoneUTCDate(new Date(d),"UTC-10:00")}
+  value={getTimezoneUTCDate(d,"UTC-10:00")}
   //返回时间字符串
   ...
 }
@@ -98,6 +100,26 @@ render(){
 
 ```
 
+
+
+timeTpicker
+
+```js
+
+
+import {  getDateFormat } from ac-format;
+
+render(){
+  let _t = '14:30:06';
+  //夏威夷时区
+  value = getTimeFormat(_t,'UTC-10:00','hh:mm:ss a');
+  //东八区
+  value = getTimeFormat(_t,'UT+8:00');
+  ...
+}
+    
+
+```
 
 ## 注意事项
 
