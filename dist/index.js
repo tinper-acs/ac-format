@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getTimezoneUTCDate = exports.formatNumber = undefined;
+exports.getDateFormat = exports.formatNumber = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16933,7 +16933,7 @@ var getOffsetMinute = function getOffsetMinute(val) {
     return Number(sym + utcMinute);
 };
 
-exports.getTimezoneUTCDate = getTimezoneUTCDate = function getTimezoneUTCDate(value) {
+var getDateFormat = function getDateFormat(value) {
     var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
     var format = arguments[2];
 
@@ -16946,7 +16946,7 @@ exports.getTimezoneUTCDate = getTimezoneUTCDate = function getTimezoneUTCDate(va
 };
 
 exports.formatNumber = formatNumber;
-exports.getTimezoneUTCDate = getTimezoneUTCDate;
+exports.getDateFormat = getDateFormat;
 ;
 
 (function () {
@@ -16965,6 +16965,7 @@ exports.getTimezoneUTCDate = getTimezoneUTCDate;
     reactHotLoader.register(getNegative, 'getNegative', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(formatNumber, 'formatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getOffsetMinute, 'getOffsetMinute', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getDateFormat, 'getDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
 })();
 
 ;

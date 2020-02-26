@@ -111,7 +111,7 @@ const getOffsetMinute = (val) => {
     return Number(sym + utcMinute);
 }
 
-getTimezoneUTCDate = (value, utc = 'UTC+8:00', format) => {
+const getDateFormat = (value, utc = 'UTC+8:00', format) => {
     if (!value) return null;
     if (format) {
         return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
@@ -122,5 +122,5 @@ getTimezoneUTCDate = (value, utc = 'UTC+8:00', format) => {
 
 export {
     formatNumber,
-    getTimezoneUTCDate,
+    getDateFormat,
 };
