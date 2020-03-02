@@ -64,10 +64,12 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 
 |API|说明|类型|默认值/参数|
 |:--|:---:|:--:|---:|
-formatNumber             |多格式转换   |function(格式,值)| 
-getMomentFromUTC             |多时区，转moment对象   |function(格式,值)| 
-getStringFromUTC             |多时区，转string 显示对象   |function(格式,值)| 
-
+formatNumber             |多格式转换   |function(格式,值)| 备注 | 
+getDateFormat             |多时区，转moment对象   |function(格式,值)|- |
+getTimeFormat             |多时区，转string 显示对象   |function(格式,值)| -|
+getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker   |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
+getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
+getGlobalizationFormatNumber|通过上下文获取多格式  |function(value)|- |
 
 多格式
 
@@ -90,9 +92,9 @@ import {  getDateFormat } from ac-format;
 
 render(){
   let d = '2020/02/06,14:30:06';
-  value={getTimezoneUTCDate(d,"UTC-10:00")}
+  value={getDateFormat(d,"UTC-10:00")}
   //返回Moment对象
-  value={getTimezoneUTCDate(d,"UTC-10:00")}
+  value={getDateFormat(d,"UTC-10:00")}
   //返回时间字符串
   ...
 }
@@ -120,6 +122,31 @@ render(){
     
 
 ```
+
+上下文封装调用
+
+```js
+
+
+import {  getGlobalizationDateFormat,getGlobalizationTimeFormat } from ac-format;
+ 
+let d = '2020/02/06,14:30:06'; 
+
+//转东八区时间
+value = getGlobalizationDateFormat(d,datetime,"UT+8:00",true)
+
+//获取上下文时间
+value = getGlobalizationDateFormat(d,datetime)
+
+let _t = '14:30:06';
+//获取上下文时间
+value = getGlobalizationTimeFormat(_t);
+
+value = getGlobalizationFormatNumber('1000003.45656');
+```
+
+
+
 
 ## 注意事项
 

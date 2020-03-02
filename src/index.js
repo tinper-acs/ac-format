@@ -84,7 +84,7 @@ const getNegative = (format, value) => {
     }
 }
 
-const formatNumber = (format, value) => {
+const formatNumber = (value,format) => {
     if (!value || value === "") return value;
     if (Number(value) === 0) return value;
 
@@ -119,10 +119,10 @@ const getDateFormat = (value, utc = 'UTC+8:00', format) => {
     }
 }
 
-const getTimeFormat = (value, utc = 'UTC+8:00', format) => {
+const getTimeFormat = (value, utc = 'UTC+8:00', format ="hh:mm:ss",resultType) => {
   if(value.indexOf(":") === -1)return value;
-  if (utc.indexOf("UTC") == -1) return value;
-  let sym = value.indexOf("+") != -1 ? "+" : "-";
+  if (utc.indexOf("UTC") === -1) return value;
+  let sym = utc.indexOf("+") != -1 ? "+" : "-";
 
   let values = value.split(":");
  
@@ -132,11 +132,78 @@ const getTimeFormat = (value, utc = 'UTC+8:00', format) => {
   hours = hours < 0?hours+24:hours;
 
   hours =  value.replace(values[0],hours);
-  return format?moment(hours,format):hours;
+  
+  hours = format?moment(hours,format):hours;
+ 
+  hours = resultType?hours.format("hh:mm:ss"):hours;
+
+  return {value:hours,format};
 }
+
+const dataformat = {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'};
+
+const globalizationDateFormat = (result) => {
+    let globalization = window.cb && cb.rest && cb.rest.AppContext && cb.rest.AppContext.globalization && cb.rest.AppContext.globalization||null;
+    const cnGlobalization = window.globalization && window.globalization||null;
+    globalization = globalization?globalization:cnGlobalization;
+    if(!globalization || !globalization.dataformat || !globalization.timezone){
+        console.log("在当前环境中,未找到 globalization 上下文!");
+        result(null);
+    }
+    result(globalization);
+}
+/**
+ * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
+ * @param {*} value 
+ * @param {*} dateType 转换类型,是date、还是dateTime
+ * @param {*} resultType  返回数据类型
+ */
+const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
+    let _value = resultType?value:moment(value);
+    let _format = null;
+    globalizationDateFormat(_glo=>{
+        _format = resultType?null:_glo && _glo.dataformat && _glo.dataformat;
+        if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
+            _format = _format && _format['dateTimeFormat']?_format['dateTimeFormat']:null;
+        }else{
+            _format = _format &&_format['dateFormat']?_format['dateFormat']:null;
+        }
+        if(_format && _glo['timezone']){
+            _value = getDateFormat(value,utc?utc:_glo['timezone'],_format);
+        }
+    });
+    return {value:_value,format:_format};
+}
+/**
+ * 根据时区转换 'H:mm:ss'
+ * @param {*} value 
+ * @param {*} resultType  返回数据类型
+ */
+const getGlobalizationTimeFormat = (value,utc,resultType = null) => {
+    let _value = resultType?value:moment(value);
+    let _format = null;
+    globalizationDateFormat(_glo=>{
+        _format = _glo && _glo.dataformat?_glo.dataformat.timeFormat:null;
+        if(_format && _glo['timezone']){
+            _value = getTimeFormat(value,utc?utc:_glo['timezone'],_format,resultType).value;
+        }
+    });
+    return {value:_value,format:_format};
+}
+
+const getGlobalizationFormatNumber = (value) => {
+    globalizationDateFormat(_glo=>{
+        let _format = _glo && _glo.numberFormat?_glo.numberFormat:null;
+        return _format?formatNumber(value,_format):value;
+    });
+   return value;
+}
+
 
 export {
     formatNumber,
     getDateFormat,
-    getTimeFormat
+    getTimeFormat,
+    getGlobalizationDateFormat,
+    getGlobalizationTimeFormat
 };
