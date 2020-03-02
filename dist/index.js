@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getTimeFormat = exports.getDateFormat = exports.formatNumber = undefined;
+exports.getGlobalizationFormatNumber = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16906,7 +16906,7 @@ var getNegative = function getNegative(format, value) {
     }
 };
 
-var formatNumber = function formatNumber(format, value) {
+var getFormatNumber = function getFormatNumber(value, format) {
     if (!value || value === "") return value;
     if (Number(value) === 0) return value;
 
@@ -16946,11 +16946,12 @@ var getDateFormat = function getDateFormat(value) {
 
 var getTimeFormat = function getTimeFormat(value) {
     var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
-    var format = arguments[2];
+    var format = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "hh:mm:ss";
+    var resultType = arguments[3];
 
     if (value.indexOf(":") === -1) return value;
-    if (utc.indexOf("UTC") == -1) return value;
-    var sym = value.indexOf("+") != -1 ? "+" : "-";
+    if (utc.indexOf("UTC") === -1) return value;
+    var sym = utc.indexOf("+") != -1 ? "+" : "-";
 
     var values = value.split(":");
 
@@ -16960,12 +16961,83 @@ var getTimeFormat = function getTimeFormat(value) {
     hours = hours < 0 ? hours + 24 : hours;
 
     hours = value.replace(values[0], hours);
-    return format ? (0, _moment2.default)(hours, format) : hours;
+
+    hours = format ? (0, _moment2.default)(hours, format) : hours;
+
+    hours = resultType ? hours.format("hh:mm:ss") : hours;
+
+    return { value: hours, format: format };
 };
 
-exports.formatNumber = formatNumber;
+var dataformat = { dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss' };
+
+var globalizationDateFormat = function globalizationDateFormat(result) {
+    var globalization = window.cb && cb.rest && cb.rest.AppContext && cb.rest.AppContext.globalization && cb.rest.AppContext.globalization || null;
+    var cnGlobalization = window.globalization && window.globalization || null;
+    globalization = globalization ? globalization : cnGlobalization;
+    if (!globalization || !globalization.dataformat || !globalization.timezone) {
+        console.log("在当前环境中,未找到 globalization 上下文!");
+        result(null);
+    }
+    result(globalization);
+};
+/**
+ * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
+ * @param {*} value 
+ * @param {*} dateType 转换类型,是date、还是dateTime
+ * @param {*} resultType  返回数据类型
+ */
+var getGlobalizationDateFormat = function getGlobalizationDateFormat(value, dateType, utc) {
+    var resultType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+    var _value = resultType ? value : (0, _moment2.default)(value);
+    var _format = null;
+    globalizationDateFormat(function (_glo) {
+        _format = resultType ? null : _glo && _glo.dataformat && _glo.dataformat;
+        if (dateType && dateType.toLocaleLowerCase() === "datetime") {
+            _format = _format && _format['dateTimeFormat'] ? _format['dateTimeFormat'] : null;
+        } else {
+            _format = _format && _format['dateFormat'] ? _format['dateFormat'] : null;
+        }
+        if (_format && _glo['timezone']) {
+            _value = getDateFormat(value, utc ? utc : _glo['timezone'], _format);
+        }
+    });
+    return { value: _value, format: _format };
+};
+/**
+ * 根据时区转换 'H:mm:ss'
+ * @param {*} value 
+ * @param {*} resultType  返回数据类型
+ */
+var getGlobalizationTimeFormat = function getGlobalizationTimeFormat(value, utc) {
+    var resultType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+    var _value = resultType ? value : (0, _moment2.default)(value);
+    var _format = null;
+    globalizationDateFormat(function (_glo) {
+        _format = _glo && _glo.dataformat ? _glo.dataformat.timeFormat : null;
+        if (_format && _glo['timezone']) {
+            _value = getTimeFormat(value, utc ? utc : _glo['timezone'], _format, resultType).value;
+        }
+    });
+    return { value: _value, format: _format };
+};
+
+var getGlobalizationFormatNumber = function getGlobalizationFormatNumber(value) {
+    globalizationDateFormat(function (_glo) {
+        var _format = _glo && _glo.dataformat && _glo.dataformat.numberFormat ? _glo.dataformat.numberFormat : null;
+        value = _format ? getFormatNumber(value, _format) : value;
+    });
+    return value;
+};
+
+exports.getFormatNumber = getFormatNumber;
 exports.getDateFormat = getDateFormat;
 exports.getTimeFormat = getTimeFormat;
+exports.getGlobalizationDateFormat = getGlobalizationDateFormat;
+exports.getGlobalizationTimeFormat = getGlobalizationTimeFormat;
+exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
 ;
 
 (function () {
@@ -16983,10 +17055,15 @@ exports.getTimeFormat = getTimeFormat;
     reactHotLoader.register(getDecimalFormat, 'getDecimalFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getPrecFormat, 'getPrecFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getNegative, 'getNegative', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
-    reactHotLoader.register(formatNumber, 'formatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getFormatNumber, 'getFormatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getOffsetMinute, 'getOffsetMinute', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getDateFormat, 'getDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getTimeFormat, 'getTimeFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(dataformat, 'dataformat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(globalizationDateFormat, 'globalizationDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getGlobalizationDateFormat, 'getGlobalizationDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getGlobalizationTimeFormat, 'getGlobalizationTimeFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getGlobalizationFormatNumber, 'getGlobalizationFormatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
 })();
 
 ;
