@@ -84,7 +84,7 @@ const getNegative = (format, value) => {
     }
 }
 
-const formatNumber = (value,format) => {
+const getFormatNumber = (value,format) => {
     if (!value || value === "") return value;
     if (Number(value) === 0) return value;
 
@@ -193,17 +193,18 @@ const getGlobalizationTimeFormat = (value,utc,resultType = null) => {
 
 const getGlobalizationFormatNumber = (value) => {
     globalizationDateFormat(_glo=>{
-        let _format = _glo && _glo.numberFormat?_glo.numberFormat:null;
-        return _format?formatNumber(value,_format):value;
+        let _format = _glo && _glo.dataformat && _glo.dataformat.numberFormat?_glo.dataformat.numberFormat:null;
+        value = _format?getFormatNumber(value,_format):value;
     });
    return value;
 }
 
 
 export {
-    formatNumber,
+    getFormatNumber,
     getDateFormat,
     getTimeFormat,
     getGlobalizationDateFormat,
-    getGlobalizationTimeFormat
+    getGlobalizationTimeFormat,
+    getGlobalizationFormatNumber
 };
