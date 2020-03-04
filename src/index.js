@@ -113,6 +113,7 @@ const getOffsetMinute = (val) => {
 const getDateFormat = (value, utc = 'UTC+8:00', format) => {
     if (!value) return null;
     if (format) {
+        format = format.replace("yyyy","YYYY").replace("dd","DD");
         return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
     } else {
         return moment(value).utcOffset(getOffsetMinute(utc));
@@ -143,18 +144,21 @@ const getTimeFormat = (value, utc = 'UTC+8:00', format ="hh:mm:ss",resultType) =
 const dataformat = {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'};
 
 const globalizationDateFormat = (result) => {
-    let globalization = getjDiworkGlobalization();
-    if(globalization && globalization.timezone && globalization.dataformat){
-        return result(globalization);
-    }
-    globalization = window.cb && cb.rest && cb.rest.AppContext && cb.rest.AppContext.globalization && cb.rest.AppContext.globalization||null;
-    const cnGlobalization = window.globalization && window.globalization||null;
-    globalization = globalization?globalization:cnGlobalization;
-    if(!globalization || !globalization.dataformat || !globalization.timezone){
-        console.log("在当前环境中,未找到 globalization 上下文!");
-        return result(null);
-    }
-    return result(globalization);
+    getjDiworkGlobalization(globalization=>{
+        result(globalization);
+    })
+    // let globalization = getjDiworkGlobalization();
+    // if(globalization && globalization.timezone && globalization.dataformat){
+    //     return result(globalization);
+    // }
+    // globalization = window.cb && cb.rest && cb.rest.AppContext && cb.rest.AppContext.globalization && cb.rest.AppContext.globalization||null;
+    // const cnGlobalization = window.globalization && window.globalization||null;
+    // globalization = globalization?globalization:cnGlobalization;
+    // if(!globalization || !globalization.dataformat || !globalization.timezone){
+    //     console.log("在当前环境中,未找到 globalization 上下文!");
+    //     return result(null);
+    // }
+    // return result(globalization);
 }
 /**
  * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
@@ -173,6 +177,7 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
             _format = _format &&_format['dateFormat']?_format['dateFormat']:null;
         }
         if(_format && _glo['timezone']){
+            _format = _format.replace("yyyy","YYYY").replace("dd","DD");
             _value = getDateFormat(value,utc?utc:_glo['timezone'],_format);
         }
     });
@@ -203,30 +208,45 @@ const getGlobalizationFormatNumber = (value) => {
    return value;
 }
 
-const getjDiworkGlobalization = () => {
-    let _globalization = null;
-    if (window.jDiwork && window.jDiwork.getContext) {
-        try {
-            jDiwork.getContext(function (arg) {
-                _globalization = {
-                    "locale": arg.locale,
-                    "sysLocale": arg.sysLocale,
-                    "multilist": JSON.parse(arg.multilist),
-                    "timezone": arg.timezone,
-                    "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
-                }
-            });
-        } catch (error) {
-            console.log("获取上下文异常!",error);
-        }
-    }else{
-        console.log("jDiwork.getContext 不存在 !");
+const initJDiwork = () => {
+    // if(!window.jDiwork || !window.jDiwork.getContext){
+        const script = document.createElement("script");
+        script.src = '//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js';
+        document.querySelector("body").appendChild(script);
+    // }
+}
+
+let time = null;
+const getjDiworkGlobalization = (don) => {
+    if(window.globalization && window.globalization.dataformat){
+        don(window.globalization);
     }
-    return _globalization;
+    time = setInterval(function(){
+        if (window.jDiwork && window.jDiwork.getContext) {
+            try {
+                jDiwork.getContext(function (arg) {
+                    clearInterval(time);
+                    window.globalization = {
+                        "locale": arg.locale,
+                        "sysLocale": arg.sysLocale,
+                        "multilist": JSON.parse(arg.multilist),
+                        "timezone": arg.timezone,
+                        "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
+                    }
+                    don(window.globalization);
+                });
+            } catch (error) {
+                console.log("获取上下文异常!",error);
+            }
+        }else{
+            console.log("jDiwork.getContext 不存在 !");
+        }
+    },1000);
 }
 
 
 export {
+    initJDiwork,
     getFormatNumber,
     getDateFormat,
     getTimeFormat,

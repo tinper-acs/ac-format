@@ -124,6 +124,22 @@ render(){
 ```
 
 上下文封装调用
+> 在使用前，要保证加载了jDiwork 上下文环境，如果没有的话，需要加载一下js
+
+jDiwork 加载方式一(推荐)
+
+```js
+<script src="//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js"></script>
+```
+
+jDiwork 加载方式二
+
+
+```js
+import { initJDiwork } from ac-format;
+```
+
+
 
 ```js
 

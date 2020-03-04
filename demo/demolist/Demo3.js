@@ -20,7 +20,7 @@ class Demo3 extends Component {
         super(props);
 
         window.globalization = {
-            timezone: 'UTC-10:00',
+            timezone: 'UTC+9:00',
             locale: 'zh_CN',
             dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
         }
@@ -30,13 +30,13 @@ class Demo3 extends Component {
     }
  
     onChange = (d, dataString) => {
-        let ut8 = getGlobalizationDateFormat(this.state.value,false,"UTC+8:00",true);
+        let ut8 = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+8:00",true);
         console.log(ut8)
     }; 
 
     render() { 
-        let  __value = getGlobalizationDateFormat(this.state.value,false,"UTC+8:00",true);
-        let {value,format} = getGlobalizationDateFormat(__value);
+        let  __value = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+8:00",true);
+        let {value,format} = getGlobalizationDateFormat(__value,'datetime');
 
         let _t = '20:19:59'; 
         let ut8 = getGlobalizationTimeFormat(_t,"UTC+8:00",true).value;
@@ -44,7 +44,7 @@ class Demo3 extends Component {
         timeFormat = timeFormat?timeFormat:'HH:mm:ss';
         return (
             <div>
-                {this.state.value}(UTC-10:00) :[编辑态]
+                {this.state.value}(UTC+90:00) :[编辑态]
                 <DatePicker
                     format={format?format:defaultFormat}
                     onChange={this.onChange}
@@ -53,8 +53,8 @@ class Demo3 extends Component {
                 />
                 <br/><br/>
 
-                {this.state.value}(UTC-10:00) :[浏览态]
-                {getGlobalizationDateFormat(this.state.value,"UTC-10:00",timeFormat,true).value}
+                {this.state.value}(UTC-10:00) 333:[浏览态]
+                {getGlobalizationDateFormat(this.state.value,'datetime',"UTC+9:00",true).value}
 
                 <br/>  <br/>
 

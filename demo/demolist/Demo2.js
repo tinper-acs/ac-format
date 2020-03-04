@@ -24,7 +24,7 @@ class Demo2 extends Component {
     
     onChange = (d, dataString) => {
         let ut8 = getDateFormat(d,"UTC+8:00",format);
-        console.log(ut8)
+        console.log("ut8:",ut8)
     }; 
      
 
@@ -41,7 +41,7 @@ class Demo2 extends Component {
         console.log(utc8+" ====time===== ",timeValue);
         return (
             <div>
-                {this.state.value}(UTC-10:00) :[编辑态]
+                {this.state.value}(UTC+9:00) :[编辑态]
                 <DatePicker
                     format={format} 
                     onChange={this.onChange}
