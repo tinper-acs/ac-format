@@ -34,7 +34,7 @@ class Demo3 extends Component {
         console.log(ut8)
     }; 
 
-    render() { 
+    render() {
         let  __value = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+8:00",true);
         let {value,format} = getGlobalizationDateFormat(__value,'datetime');
 

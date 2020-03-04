@@ -170,14 +170,14 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
     let _value = resultType?value:moment(value);
     let _format = null;
     globalizationDateFormat(_glo=>{
-        _format = resultType?null:_glo && _glo.dataformat && _glo.dataformat;
+        _format = resultType?_glo && _glo.dataformat && _glo.dataformat:null;
         if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
             _format = _format && _format['dateTimeFormat']?_format['dateTimeFormat']:null;
         }else{
             _format = _format &&_format['dateFormat']?_format['dateFormat']:null;
         }
-        if(_format && _glo['timezone']){
-            _format = _format.replace("yyyy","YYYY").replace("dd","DD");
+        if(_glo['timezone']){
+            _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
             _value = getDateFormat(value,utc?utc:_glo['timezone'],_format);
         }
     });
@@ -193,7 +193,7 @@ const getGlobalizationTimeFormat = (value,utc,resultType = null) => {
     let _format = null;
     globalizationDateFormat(_glo=>{
         _format = _glo && _glo.dataformat?_glo.dataformat.timeFormat:null;
-        if(_format && _glo['timezone']){
+        if(_glo['timezone']){
             _value = getTimeFormat(value,utc?utc:_glo['timezone'],_format,resultType).value;
         }
     });

@@ -17001,14 +17001,14 @@ var getGlobalizationDateFormat = function getGlobalizationDateFormat(value, date
     var _value = resultType ? value : (0, _moment2.default)(value);
     var _format = null;
     globalizationDateFormat(function (_glo) {
-        _format = resultType ? null : _glo && _glo.dataformat && _glo.dataformat;
+        _format = resultType ? _glo && _glo.dataformat && _glo.dataformat : null;
         if (dateType && dateType.toLocaleLowerCase() === "datetime") {
             _format = _format && _format['dateTimeFormat'] ? _format['dateTimeFormat'] : null;
         } else {
             _format = _format && _format['dateFormat'] ? _format['dateFormat'] : null;
         }
-        if (_format && _glo['timezone']) {
-            _format = _format.replace("yyyy", "YYYY").replace("dd", "DD");
+        if (_glo['timezone']) {
+            _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
             _value = getDateFormat(value, utc ? utc : _glo['timezone'], _format);
         }
     });
@@ -17026,7 +17026,7 @@ var getGlobalizationTimeFormat = function getGlobalizationTimeFormat(value, utc)
     var _format = null;
     globalizationDateFormat(function (_glo) {
         _format = _glo && _glo.dataformat ? _glo.dataformat.timeFormat : null;
-        if (_format && _glo['timezone']) {
+        if (_glo['timezone']) {
             _value = getTimeFormat(value, utc ? utc : _glo['timezone'], _format, resultType).value;
         }
     });
