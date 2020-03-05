@@ -25,7 +25,7 @@
 </ul>
       </div>
       <div class="span9 main"><h1 id="ac-format">ac-format</h1>
-<pre class="hljs"><code>针对多格式，进行转换输出<span class="hljs-selector-tag">sdk</span>，目前只提供一个<span class="hljs-selector-tag">api</span>。 <span class="hljs-selector-tag">bee-input-number</span>&gt;2<span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.11</span> </code></pre><h2 id="如何使用">如何使用</h2>
+<pre class="hljs"><code>针对多格式、多时区，进行转换输出<span class="hljs-selector-tag">sdk</span>，目前只提供一个<span class="hljs-selector-tag">api</span>。 <span class="hljs-selector-tag">bee-input-number</span>&gt;2<span class="hljs-selector-class">.2</span><span class="hljs-selector-class">.11</span> </code></pre><h2 id="如何使用">如何使用</h2>
 <pre class="hljs"><code>
   安装
   ynpm install ac-format --save
@@ -134,12 +134,71 @@
 </tr>
 </tbody>
 </table>
-<p>formatNumber             |多格式转换   |function(格式,值)| </p>
+<p>formatNumber             |多格式转换   |function(格式,值)| 备注 | 
+getDateFormat             |多时区，转moment对象   |function(格式,值)|- |
+getTimeFormat             |多时区，转string 显示对象   |function(格式,值)| -|
+getGlobalizationDateFormatString| 把东八区 转 东七区 、互转(输入、输出都是字符串)  |function(value,valueUtc,utc,resultType,format)| @param {<em>} valueUtc 输入值的时区信息  @param {</em>} utc   @param {<em>} resultType datetime 是否带有年、月、日 时、分、秒    @param {</em>} format 格式化字符(可忽略) |
+getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker   |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【&quot;YYYY-MM-DD&quot;/&quot;YYYY-MM-DD HH:mm:ss&quot;,默认 &quot;YYYY-MM-DD&quot;】、resultType  返回数据类型 | 
+getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
+getGlobalizationFormatNumber|通过上下文获取多格式  |function(value)|- |</p>
+<p>多格式</p>
 <pre class="hljs"><code>
 
 formatNumber(<span class="hljs-string">"+ ###,###[.]####"</span>, <span class="hljs-number">123456789.123</span>) 
-</code></pre><h2 id="注意事项">注意事项</h2>
-<p>  bee-input-number&gt;2.2.11 </p>
+</code></pre><p>多时区</p>
+<p>dateTpicker</p>
+<pre class="hljs"><code>
+
+<span class="hljs-keyword">import</span> {  getDateFormat } <span class="hljs-keyword">from</span> ac-format;
+
+render(){
+  <span class="hljs-keyword">let</span> d = <span class="hljs-string">'2020/02/06,14:30:06'</span>;
+  value={getDateFormat(d,<span class="hljs-string">"UTC-10:00"</span>)}
+  <span class="hljs-comment">//返回Moment对象</span>
+  value={getDateFormat(d,<span class="hljs-string">"UTC-10:00"</span>)}
+  <span class="hljs-comment">//返回时间字符串</span>
+  ...
+}
+
+</code></pre><p>timeTpicker</p>
+<pre class="hljs"><code>
+
+<span class="hljs-keyword">import</span> {  getDateFormat } <span class="hljs-keyword">from</span> ac-format;
+
+render(){
+  <span class="hljs-keyword">let</span> _t = <span class="hljs-string">'14:30:06'</span>;
+  <span class="hljs-comment">//夏威夷时区</span>
+  value = getTimeFormat(_t,<span class="hljs-string">'UTC-10:00'</span>,<span class="hljs-string">'hh:mm:ss a'</span>);
+  <span class="hljs-comment">//东八区</span>
+  value = getTimeFormat(_t,<span class="hljs-string">'UT+8:00'</span>);
+  ...
+}
+
+</code></pre><p>上下文封装调用</p>
+<blockquote>
+<p>在使用前，要保证加载了jDiwork 上下文环境，如果没有的话，需要加载一下js</p>
+</blockquote>
+<p>jDiwork 加载方式一(推荐)</p>
+<pre class="hljs"><code>&lt;script src=<span class="hljs-string">"//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre><p>jDiwork 加载方式二</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { initJDiwork } <span class="hljs-keyword">from</span> ac-format;</code></pre><pre class="hljs"><code>
+
+<span class="hljs-keyword">import</span> {  getGlobalizationDateFormat,getGlobalizationTimeFormat } <span class="hljs-keyword">from</span> ac-format;
+
+<span class="hljs-keyword">let</span> d = <span class="hljs-string">'2020/02/06,14:30:06'</span>; 
+
+<span class="hljs-comment">//转东八区时间</span>
+value = getGlobalizationDateFormat(d,datetime,<span class="hljs-string">"UT+8:00"</span>,<span class="hljs-literal">true</span>)
+
+<span class="hljs-comment">//获取上下文时间</span>
+value = getGlobalizationDateFormat(d,datetime)
+
+<span class="hljs-keyword">let</span> _t = <span class="hljs-string">'14:30:06'</span>;
+<span class="hljs-comment">//获取上下文时间</span>
+value = getGlobalizationTimeFormat(_t);
+
+value = getGlobalizationFormatNumber(<span class="hljs-string">'1000003.45656'</span>);</code></pre><h2 id="注意事项">注意事项</h2>
+<p>  bee-input-number&gt;2.2.11 
+  必须安装 moment 对象。</p>
 <h2 id="更新日志">更新日志</h2>
       </div>
     </div>
