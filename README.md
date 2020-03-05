@@ -67,6 +67,7 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 formatNumber             |多格式转换   |function(格式,值)| 备注 | 
 getDateFormat             |多时区，转moment对象   |function(格式,值)|- |
 getTimeFormat             |多时区，转string 显示对象   |function(格式,值)| -|
+getGlobalizationDateFormatString| 把东八区 转 东七区 、互转(输入、输出都是字符串)  |function(value,valueUtc,utc,resultType,format)| @param {*} valueUtc 输入值的时区信息  @param {*} utc   @param {*} resultType datetime 是否带有年、月、日 时、分、秒    @param {*} format 格式化字符(可忽略) |
 getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker   |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
 getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
 getGlobalizationFormatNumber|通过上下文获取多格式  |function(value)|- |

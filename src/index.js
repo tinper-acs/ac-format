@@ -5,6 +5,41 @@ const defaultFormat = '+ ###,###[.]####';
 const numberFormat = '0000000000000';
 const strFormat = '#############';
 const defaultUtc = 8;
+ 
+Date.prototype.pattern=function(fmt) {           
+    var o = {           
+    "M+" : this.getMonth()+1, //月份           
+    "d+" : this.getDate(), //日           
+    "h+" : this.getHours()%12 == 0 ? 12 : this.getHours()%12, //小时           
+    "H+" : this.getHours(), //小时           
+    "m+" : this.getMinutes(), //分           
+    "s+" : this.getSeconds(), //秒           
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度           
+    "S" : this.getMilliseconds() //毫秒           
+    };           
+    var week = {           
+    "0" : "/u65e5",           
+    "1" : "/u4e00",           
+    "2" : "/u4e8c",           
+    "3" : "/u4e09",           
+    "4" : "/u56db",           
+    "5" : "/u4e94",           
+    "6" : "/u516d"          
+    };           
+    if(/(y+)/.test(fmt)){           
+        fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));           
+    }           
+    if(/(E+)/.test(fmt)){           
+        fmt=fmt.replace(RegExp.$1, ((RegExp.$1.length>1) ? (RegExp.$1.length>2 ? "/u661f/u671f" : "/u5468") : "")+week[this.getDay()+""]);           
+    }           
+    for(var k in o){           
+        if(new RegExp("("+ k +")").test(fmt)){           
+            fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));           
+        }           
+    }           
+    return fmt;           
+}
+
 /**
  * 千分位的数量
  * @param {*} format  
@@ -110,7 +145,7 @@ const getOffsetMinute = (val) => {
     return Number(sym + utcMinute);
 }
 
-const getDateFormat = (value, utc = 'UTC+8:00', format) => {
+const getDateFormat = (value, utc = 'UTC+08:00', format) => {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy","YYYY").replace("dd","DD");
@@ -120,7 +155,7 @@ const getDateFormat = (value, utc = 'UTC+8:00', format) => {
     }
 }
 
-const getTimeFormat = (value, utc = 'UTC+8:00', format ="hh:mm:ss",resultType) => {
+const getTimeFormat = (value, utc = 'UTC+08:00', format ="hh:mm:ss",resultType) => {
   if(value.indexOf(":") === -1)return value;
   if (utc.indexOf("UTC") === -1) return value;
   let sym = utc.indexOf("+") != -1 ? "+" : "-";
@@ -183,6 +218,77 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
     });
     return {value:_value,format:_format};
 }
+const getStrUtcNum = (utc = 'UTC+08:00') =>{
+    utc = utc.toLocaleUpperCase();
+    if (utc.indexOf("UTC") === -1 || utc.length !== 9){
+        console.log(" utc format is error ! "+utc);
+        return 'UTC+08:00';
+    }
+    return Number(utc.substring(3,6));
+}
+
+/**
+ * 根据已知时区，求转换时区
+ * @param {*} value 字符串类型
+ * @param {*} valueUtc 已知时区
+ * @param {*} utc   转换时区
+ * @param {*} resultType 
+ */
+const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
+    if(!value)return value;
+    const d = new Date(value);
+    let hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
+    d.setHours(hours);
+    if(hours < 0){
+        d.setDate(d.getDate() - 1);
+        hours + 24;
+    }
+    return d;
+}
+
+/**
+ * 
+ * @param {*} value 
+ * @param {*} valueUtc 
+ * @param {*} utc 
+ * @param {*} format 
+ */
+const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00', format) => {
+    if (!value) return null;
+    let newValue = getDateUTCString(value,valueUtc,utc)
+    if (format) {
+        format = format.replace("YYYY","yyyy").replace("DD","dd");
+        return newValue.pattern(format);
+    }
+    return newValue.pattern("yyyy-MM-dd HH:mm:ss");
+}
+
+/**
+ * 输入时间字符串,告知时区，转换成某个时区
+ * @param {*} value 
+ * @param {*} valueUtc 输入值的时区信息
+ * @param {*} utc 
+ * @param {*} resultType datetime 是否带有年、月、日 时、分、秒
+* @param {*} format 格式化字符(可忽略) 
+ */
+const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,format) => {
+    let _format = format;
+    globalizationDateFormat(_glo=>{
+        _format = format?format:_glo && _glo.dataformat && _glo.dataformat;
+        if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
+            _format = format?format:_format['dateTimeFormat'];
+        }else{
+            _format = format?format:_format['dateFormat'];
+        }
+        if(_glo['timezone']){
+            _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
+            value = getDateFormatString(value,valueUtc,utc?utc:_glo['timezone'],_format);
+        }
+    });
+    return {value,format:_format};
+}
+
+
 /**
  * 根据时区转换 'H:mm:ss'
  * @param {*} value 
@@ -219,10 +325,10 @@ const initJDiwork = () => {
 let time = null;
 const getjDiworkGlobalization = (don) => {
     if(window.globalization && window.globalization.dataformat){
-        don(window.globalization);
+        return don(window.globalization);
     }
     time = setInterval(function(){
-        if (window.jDiwork && window.jDiwork.getContext) {
+        if (!window.jDiwork || !window.jDiwork.getContext) {
             try {
                 jDiwork.getContext(function (arg) {
                     clearInterval(time);
@@ -244,7 +350,6 @@ const getjDiworkGlobalization = (don) => {
     },1000);
 }
 
-
 export {
     initJDiwork,
     getFormatNumber,
@@ -252,5 +357,6 @@ export {
     getTimeFormat,
     getGlobalizationDateFormat,
     getGlobalizationTimeFormat,
+    getGlobalizationDateFormatString,
     getGlobalizationFormatNumber
 };

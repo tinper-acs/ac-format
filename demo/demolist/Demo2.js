@@ -1,7 +1,7 @@
 /**
  *
  * @title DatePicker、Timepicker 时区 格式化
- * @description 根据多时区普通调用转换时间 getDateFormat,getTimeFormat
+ * @description 根据多时区普通调用转换时间 getDateFormat,getTimeFormat,配合moment对象使用
  *
  */
 import React, { Component } from 'react';

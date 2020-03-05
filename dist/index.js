@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getGlobalizationFormatNumber = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = exports.initJDiwork = undefined;
+exports.getGlobalizationFormatNumber = exports.getGlobalizationDateFormatString = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = exports.initJDiwork = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16825,6 +16825,41 @@ var defaultFormat = '+ ###,###[.]####';
 var numberFormat = '0000000000000';
 var strFormat = '#############';
 var defaultUtc = 8;
+
+Date.prototype.pattern = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份           
+        "d+": this.getDate(), //日           
+        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时           
+        "H+": this.getHours(), //小时           
+        "m+": this.getMinutes(), //分           
+        "s+": this.getSeconds(), //秒           
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度           
+        "S": this.getMilliseconds() //毫秒           
+    };
+    var week = {
+        "0": "/u65e5",
+        "1": "/u4e00",
+        "2": "/u4e8c",
+        "3": "/u4e09",
+        "4": "/u56db",
+        "5": "/u4e94",
+        "6": "/u516d"
+    };
+    if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    if (/(E+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length > 1 ? RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468" : "") + week[this.getDay() + ""]);
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return fmt;
+};
+
 /**
  * 千分位的数量
  * @param {*} format  
@@ -16933,7 +16968,7 @@ var getOffsetMinute = function getOffsetMinute(val) {
 };
 
 var getDateFormat = function getDateFormat(value) {
-    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
+    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+08:00';
     var format = arguments[2];
 
     if (!value) return null;
@@ -16946,7 +16981,7 @@ var getDateFormat = function getDateFormat(value) {
 };
 
 var getTimeFormat = function getTimeFormat(value) {
-    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+8:00';
+    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+08:00';
     var format = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "hh:mm:ss";
     var resultType = arguments[3];
 
@@ -17014,6 +17049,84 @@ var getGlobalizationDateFormat = function getGlobalizationDateFormat(value, date
     });
     return { value: _value, format: _format };
 };
+var getStrUtcNum = function getStrUtcNum() {
+    var utc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'UTC+08:00';
+
+    utc = utc.toLocaleUpperCase();
+    if (utc.indexOf("UTC") === -1 || utc.length !== 9) {
+        console.log(" utc format is error ! " + utc);
+        return 'UTC+08:00';
+    }
+    return Number(utc.substring(3, 6));
+};
+
+/**
+ * 根据已知时区，求转换时区
+ * @param {*} value 字符串类型
+ * @param {*} valueUtc 已知时区
+ * @param {*} utc   转换时区
+ * @param {*} resultType 
+ */
+var getDateUTCString = function getDateUTCString(value) {
+    var valueUtc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+08:00';
+    var utc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'UTC+08:00';
+
+    if (!value) return value;
+    var d = new Date(value);
+    var hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
+    d.setHours(hours);
+    if (hours < 0) {
+        d.setDate(d.getDate() - 1);
+        hours + 24;
+    }
+    return d;
+};
+
+/**
+ * 
+ * @param {*} value 
+ * @param {*} valueUtc 
+ * @param {*} utc 
+ * @param {*} format 
+ */
+var getDateFormatString = function getDateFormatString(value, valueUtc) {
+    var utc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'UTC+08:00';
+    var format = arguments[3];
+
+    if (!value) return null;
+    var newValue = getDateUTCString(value, valueUtc, utc);
+    if (format) {
+        format = format.replace("YYYY", "yyyy").replace("DD", "dd");
+        return newValue.pattern(format);
+    }
+    return newValue.pattern("yyyy-MM-dd HH:mm:ss");
+};
+
+/**
+ * 输入时间字符串,告知时区，转换成某个时区
+ * @param {*} value 
+ * @param {*} valueUtc 输入值的时区信息
+ * @param {*} utc 
+ * @param {*} resultType datetime 是否带有年、月、日 时、分、秒
+* @param {*} format 格式化字符(可忽略) 
+ */
+var getGlobalizationDateFormatString = function getGlobalizationDateFormatString(value, valueUtc, utc, dateType, format) {
+    var _format = format;
+    globalizationDateFormat(function (_glo) {
+        _format = format ? format : _glo && _glo.dataformat && _glo.dataformat;
+        if (dateType && dateType.toLocaleLowerCase() === "datetime") {
+            _format = format ? format : _format['dateTimeFormat'];
+        } else {
+            _format = format ? format : _format['dateFormat'];
+        }
+        if (_glo['timezone']) {
+            _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
+            value = getDateFormatString(value, valueUtc, utc ? utc : _glo['timezone'], _format);
+        }
+    });
+    return { value: value, format: _format };
+};
+
 /**
  * 根据时区转换 'H:mm:ss'
  * @param {*} value 
@@ -17052,10 +17165,10 @@ var initJDiwork = function initJDiwork() {
 var time = null;
 var getjDiworkGlobalization = function getjDiworkGlobalization(don) {
     if (window.globalization && window.globalization.dataformat) {
-        don(window.globalization);
+        return don(window.globalization);
     }
     time = setInterval(function () {
-        if (window.jDiwork && window.jDiwork.getContext) {
+        if (!window.jDiwork || !window.jDiwork.getContext) {
             try {
                 jDiwork.getContext(function (arg) {
                     clearInterval(time);
@@ -17083,6 +17196,7 @@ exports.getDateFormat = getDateFormat;
 exports.getTimeFormat = getTimeFormat;
 exports.getGlobalizationDateFormat = getGlobalizationDateFormat;
 exports.getGlobalizationTimeFormat = getGlobalizationTimeFormat;
+exports.getGlobalizationDateFormatString = getGlobalizationDateFormatString;
 exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
 ;
 
@@ -17108,6 +17222,10 @@ exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
     reactHotLoader.register(dataformat, 'dataformat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(globalizationDateFormat, 'globalizationDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getGlobalizationDateFormat, 'getGlobalizationDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getStrUtcNum, 'getStrUtcNum', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getDateUTCString, 'getDateUTCString', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getDateFormatString, 'getDateFormatString', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getGlobalizationDateFormatString, 'getGlobalizationDateFormatString', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getGlobalizationTimeFormat, 'getGlobalizationTimeFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getGlobalizationFormatNumber, 'getGlobalizationFormatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(initJDiwork, 'initJDiwork', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
