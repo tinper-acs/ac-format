@@ -43,12 +43,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-1": "^6.24.1",
     "bee-clipboard": "^2.0.2",
-    "bee-datepicker": "^2.3.10",
-    "bee-drawer": "0.0.2",
-    "bee-input-number": "^2.2.19",
-    "bee-layout": "latest",
-    "bee-panel": "latest",
-    "bee-timepicker": "^2.0.11",
     "css-loader": "^1.0.0",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
@@ -82,14 +76,14 @@
     "webpack-cli": "^3.1.0",
     "webpack-dev-server": "^3.1.5",
     "webpack-merge": "^4.1.4",
-    "webpack-node-externals": "^1.7.2"
-  },
-  "peerDependencies": {
-    "react": "^15.3.0 || ^16.0.0",
-    "react-dom": "^15.3.0 || ^16.0.0",
-    "prop-types": "^15.6.0"
-  },
-  "dependencies": {
-    "accounting": "^0.4.1"
+    "webpack-node-externals": "^1.7.2", 
+    "prop-types": "^15.6.0",
+    "accounting": "^0.4.1",
+    "bee-datepicker": "^2.3.10",
+    "bee-drawer": "0.0.2",
+    "bee-input-number": "^2.2.19",
+    "bee-layout": "latest",
+    "bee-panel": "latest",
+    "bee-timepicker": "^2.0.11"
   }
 }
