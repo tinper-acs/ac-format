@@ -16825,40 +16825,7 @@ var defaultFormat = '+ ###,###[.]####';
 var numberFormat = '0000000000000';
 var strFormat = '#############';
 var defaultUtc = 8;
-
-Date.prototype.pattern = function (fmt) {
-    var o = {
-        "M+": this.getMonth() + 1, //月份           
-        "d+": this.getDate(), //日           
-        "h+": this.getHours() % 12 == 0 ? 12 : this.getHours() % 12, //小时           
-        "H+": this.getHours(), //小时           
-        "m+": this.getMinutes(), //分           
-        "s+": this.getSeconds(), //秒           
-        "q+": Math.floor((this.getMonth() + 3) / 3), //季度           
-        "S": this.getMilliseconds() //毫秒           
-    };
-    var week = {
-        "0": "/u65e5",
-        "1": "/u4e00",
-        "2": "/u4e8c",
-        "3": "/u4e09",
-        "4": "/u56db",
-        "5": "/u4e94",
-        "6": "/u516d"
-    };
-    if (/(y+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
-    }
-    if (/(E+)/.test(fmt)) {
-        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length > 1 ? RegExp.$1.length > 2 ? "/u661f/u671f" : "/u5468" : "") + week[this.getDay() + ""]);
-    }
-    for (var k in o) {
-        if (new RegExp("(" + k + ")").test(fmt)) {
-            fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
-        }
-    }
-    return fmt;
-};
+var dafaultDateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 /**
  * 千分位的数量
@@ -17074,11 +17041,11 @@ var getDateUTCString = function getDateUTCString(value) {
     if (!value) return value;
     var d = new Date(value);
     var hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
-    d.setHours(hours);
     if (hours < 0) {
         d.setDate(d.getDate() - 1);
-        hours + 24;
+        hours = hours + 24;
     }
+    d.setHours(hours);
     return d;
 };
 
@@ -17087,19 +17054,17 @@ var getDateUTCString = function getDateUTCString(value) {
  * @param {*} value 
  * @param {*} valueUtc 
  * @param {*} utc 
- * @param {*} format 
+ * @param {*} format 当前数据的格式(DD.MM / MM.DD 无法区分)
  */
 var getDateFormatString = function getDateFormatString(value, valueUtc) {
     var utc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'UTC+08:00';
     var format = arguments[3];
 
     if (!value) return null;
-    var newValue = getDateUTCString(value, valueUtc, utc);
-    if (format) {
-        format = format.replace("YYYY", "yyyy").replace("DD", "dd");
-        return newValue.pattern(format);
-    }
-    return newValue.pattern("yyyy-MM-dd HH:mm:ss");
+    var _value = format ? (0, _moment2.default)(value).format(format) : value; //(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
+    _value = getDateUTCString(_value, valueUtc, utc);
+    _value = format ? (0, _moment2.default)(_value).format(format) : _value;
+    return _value;
 };
 
 /**
@@ -17108,21 +17073,25 @@ var getDateFormatString = function getDateFormatString(value, valueUtc) {
  * @param {*} valueUtc 输入值的时区信息
  * @param {*} utc 
  * @param {*} resultType datetime 是否带有年、月、日 时、分、秒
-* @param {*} format 格式化字符(可忽略) 
+* @param {*} format 上下文时间格式化字符(可忽略)
+* @param {*} toFormat 需要转换出来的格式化时间,默认按照上下文输出即可
  */
-var getGlobalizationDateFormatString = function getGlobalizationDateFormatString(value, valueUtc, utc, dateType, format) {
-    var _format = format;
+var getGlobalizationDateFormatString = function getGlobalizationDateFormatString(value, valueUtc, utc, dateType, gloformat) {
+    var toFormat = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : dafaultDateFormat;
+
+    var _format = gloformat;
     globalizationDateFormat(function (_glo) {
-        _format = format ? format : _glo && _glo.dataformat && _glo.dataformat;
+        _format = gloformat ? gloformat : _glo && _glo.dataformat && _glo.dataformat;
         if (dateType && dateType.toLocaleLowerCase() === "datetime") {
-            _format = format ? format : _format['dateTimeFormat'];
+            _format = gloformat ? gloformat : _format['dateTimeFormat'];
         } else {
-            _format = format ? format : _format['dateFormat'];
+            _format = gloformat ? gloformat : _format['dateFormat'];
         }
         if (_glo['timezone']) {
             _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
             value = getDateFormatString(value, valueUtc ? valueUtc : _glo['timezone'], utc ? utc : _glo['timezone'], _format);
         }
+        value = value && toFormat ? (0, _moment2.default)((0, _moment2.default)(value, _format)).format(toFormat) : value;
     });
     return { value: value, format: _format };
 };
@@ -17155,11 +17124,9 @@ var getGlobalizationFormatNumber = function getGlobalizationFormatNumber(value) 
 };
 
 var initJDiwork = function initJDiwork() {
-    // if(!window.jDiwork || !window.jDiwork.getContext){
     var script = document.createElement("script");
     script.src = '//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js';
     document.querySelector("body").appendChild(script);
-    // }
 };
 
 var time = null;
@@ -17167,6 +17134,7 @@ var getjDiworkGlobalization = function getjDiworkGlobalization(don) {
     if (window.globalization && window.globalization.dataformat) {
         return don(window.globalization);
     }
+    initJDiwork();
     time = setInterval(function () {
         if (!window.jDiwork || !window.jDiwork.getContext) {
             try {
@@ -17211,6 +17179,7 @@ exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
     reactHotLoader.register(numberFormat, 'numberFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(strFormat, 'strFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(defaultUtc, 'defaultUtc', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(dafaultDateFormat, 'dafaultDateFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getPrecisionLen, 'getPrecisionLen', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getDecimalFormat, 'getDecimalFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getPrecFormat, 'getPrecFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');

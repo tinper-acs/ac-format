@@ -10,12 +10,21 @@
   ynpm install ac-format --save
 
   引入
-  import formatNumber from "ac-format"; 
+  import {
+    initJDiwork,
+    getFormatNumber,
+    getDateFormat,
+    getTimeFormat,
+    getGlobalizationDateFormat,
+    getGlobalizationTimeFormat,
+    getGlobalizationDateFormatString,
+    getGlobalizationFormatNumber
+    } from "ac-format"; 
 
   使用 
   ...
  
- formatNumber.formatNumber()
+ getFormatNumber.formatNumber()
 
 ```
 
@@ -59,25 +68,25 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 
 ```
 
-## API 
-
+## API
 
 |API|说明|类型|默认值/参数|
 |:--|:---:|:--:|---:|
-formatNumber             |多格式转换   |function(格式,值)| 备注 | 
-getDateFormat             |多时区，转moment对象   |function(格式,值)|- |
-getTimeFormat             |多时区，转string 显示对象   |function(格式,值)| -|
-getGlobalizationDateFormatString| 把东八区 转 东七区 、互转(输入、输出都是字符串)  |function(value,valueUtc,utc,resultType,format)| @param {*} valueUtc 输入值的时区信息  @param {*} utc   @param {*} resultType datetime 是否带有年、月、日 时、分、秒    @param {*} format 格式化字符(可忽略) |
-getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker   |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
+initJDiwork             | CN 项目追加diwok 上下文   | function | - |
+getFormatNumber |多格式转换   |function(格式,值)| - | 
+getDateFormat  |多时区，转moment对象|function(值,时区,格式)|- |
+getTimeFormat  |多时区，转string 显示对象  |function(值,时区,格式,返回值)| -|
+getGlobalizationFormatNumber|获取上下文设置多格式  |function(value)|- |
+getGlobalizationDateFormatString|时区、格式 互转，省略值会从上下文获取 |function(value,valueUtc,utc,dateType,gloformat,toFormat)| 详细使用见demo4 |
+getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
 getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
-getGlobalizationFormatNumber|通过上下文获取多格式  |function(value)|- |
 
 多格式
 
 ```js
 
 
-formatNumber("+ ###,###[.]####", 123456789.123) 
+getFormatNumber("+ ###,###[.]####", 123456789.123) 
 
 ```
 
@@ -140,12 +149,12 @@ jDiwork 加载方式二
 import { initJDiwork } from ac-format;
 ```
 
-
+所以例子都有github的demo 为准
 
 ```js
 
 
-import {  getGlobalizationDateFormat,getGlobalizationTimeFormat } from ac-format;
+import {  getGlobalizationDateFormat,getGlobalizationTimeFormat,getGlobalizationDateFormatString } from ac-format;
  
 let d = '2020/02/06,14:30:06'; 
 
@@ -160,14 +169,19 @@ let _t = '14:30:06';
 value = getGlobalizationTimeFormat(_t);
 
 value = getGlobalizationFormatNumber('1000003.45656');
-```
 
+//根据时区转换,输入、输出都是字符串(demo4)
+let toFormat = 'YYYY-MM-DD HH:mm:ss';
+let utc8 = "UTC+08:00";
+let  {value:__value} = getGlobalizationDateFormatString(this.state.value,null,utc8,'datetime');
+let  {value:__value2,format} = getGlobalizationDateFormatString(__value,utc8,"UTC+07:00",'datetime');
+  
 
-
+``` 
 
 ## 注意事项
 
-  bee-input-number>2.2.11 
+  bee-input-number>2.2.21
   必须安装 moment 对象。
 
 ## 更新日志
