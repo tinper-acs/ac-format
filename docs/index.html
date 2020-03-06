@@ -31,12 +31,21 @@
   ynpm install ac-format --save
 
   引入
-  <span class="hljs-keyword">import</span> formatNumber <span class="hljs-keyword">from</span> <span class="hljs-string">"ac-format"</span>; 
+  <span class="hljs-keyword">import</span> {
+    initJDiwork,
+    getFormatNumber,
+    getDateFormat,
+    getTimeFormat,
+    getGlobalizationDateFormat,
+    getGlobalizationTimeFormat,
+    getGlobalizationDateFormatString,
+    getGlobalizationFormatNumber
+    } <span class="hljs-keyword">from</span> <span class="hljs-string">"ac-format"</span>; 
 
   使用 
   ...
 
- formatNumber.formatNumber()
+ getFormatNumber.formatNumber()
 </code></pre><h3 id="cnd-标签使用">cnd 标签使用</h3>
 <pre class="hljs"><code>  &lt;script src=<span class="hljs-string">"//design.yonyoucloud.com/static/tinper-bee/latest/ac-format/dist/index.js"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre><h3 id="转换规则如下">转换规则如下</h3>
 <table>
@@ -134,17 +143,18 @@
 </tr>
 </tbody>
 </table>
-<p>formatNumber             |多格式转换   |function(格式,值)| 备注 | 
-getDateFormat             |多时区，转moment对象   |function(格式,值)|- |
-getTimeFormat             |多时区，转string 显示对象   |function(格式,值)| -|
-getGlobalizationDateFormatString| 把东八区 转 东七区 、互转(输入、输出都是字符串)  |function(value,valueUtc,utc,resultType,format)| @param {<em>} valueUtc 输入值的时区信息  @param {</em>} utc   @param {<em>} resultType datetime 是否带有年、月、日 时、分、秒    @param {</em>} format 格式化字符(可忽略) |
-getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker   |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【&quot;YYYY-MM-DD&quot;/&quot;YYYY-MM-DD HH:mm:ss&quot;,默认 &quot;YYYY-MM-DD&quot;】、resultType  返回数据类型 | 
-getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
-getGlobalizationFormatNumber|通过上下文获取多格式  |function(value)|- |</p>
+<p>initJDiwork             | CN 项目追加diwok 上下文   | function | - |
+getFormatNumber |多格式转换   |function(格式,值)| - | 
+getDateFormat  |多时区，转moment对象|function(值,时区,格式)|- |
+getTimeFormat  |多时区，转string 显示对象  |function(值,时区,格式,返回值)| -|
+getGlobalizationFormatNumber|获取上下文设置多格式  |function(value)|- |
+getGlobalizationDateFormatString|时区、格式 互转，省略值会从上下文获取 |function(value,valueUtc,utc,dateType,gloformat,toFormat)| 详细使用见demo4 |
+getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【&quot;YYYY-MM-DD&quot;/&quot;YYYY-MM-DD HH:mm:ss&quot;,默认 &quot;YYYY-MM-DD&quot;】、resultType  返回数据类型 | 
+getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |</p>
 <p>多格式</p>
 <pre class="hljs"><code>
 
-formatNumber(<span class="hljs-string">"+ ###,###[.]####"</span>, <span class="hljs-number">123456789.123</span>) 
+getFormatNumber(<span class="hljs-string">"+ ###,###[.]####"</span>, <span class="hljs-number">123456789.123</span>) 
 </code></pre><p>多时区</p>
 <p>dateTpicker</p>
 <pre class="hljs"><code>
@@ -180,9 +190,10 @@ render(){
 </blockquote>
 <p>jDiwork 加载方式一(推荐)</p>
 <pre class="hljs"><code>&lt;script src=<span class="hljs-string">"//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js"</span>&gt;<span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></span></code></pre><p>jDiwork 加载方式二</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { initJDiwork } <span class="hljs-keyword">from</span> ac-format;</code></pre><pre class="hljs"><code>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { initJDiwork } <span class="hljs-keyword">from</span> ac-format;</code></pre><p>所以例子都有github的demo 为准</p>
+<pre class="hljs"><code>
 
-<span class="hljs-keyword">import</span> {  getGlobalizationDateFormat,getGlobalizationTimeFormat } <span class="hljs-keyword">from</span> ac-format;
+<span class="hljs-keyword">import</span> {  getGlobalizationDateFormat,getGlobalizationTimeFormat,getGlobalizationDateFormatString } <span class="hljs-keyword">from</span> ac-format;
 
 <span class="hljs-keyword">let</span> d = <span class="hljs-string">'2020/02/06,14:30:06'</span>; 
 
@@ -196,8 +207,16 @@ value = getGlobalizationDateFormat(d,datetime)
 <span class="hljs-comment">//获取上下文时间</span>
 value = getGlobalizationTimeFormat(_t);
 
-value = getGlobalizationFormatNumber(<span class="hljs-string">'1000003.45656'</span>);</code></pre><h2 id="注意事项">注意事项</h2>
-<p>  bee-input-number&gt;2.2.11 
+value = getGlobalizationFormatNumber(<span class="hljs-string">'1000003.45656'</span>);
+
+<span class="hljs-comment">//根据时区转换,输入、输出都是字符串(demo4)</span>
+<span class="hljs-keyword">let</span> toFormat = <span class="hljs-string">'YYYY-MM-DD HH:mm:ss'</span>;
+<span class="hljs-keyword">let</span> utc8 = <span class="hljs-string">"UTC+08:00"</span>;
+<span class="hljs-keyword">let</span>  {<span class="hljs-attr">value</span>:__value} = getGlobalizationDateFormatString(<span class="hljs-keyword">this</span>.state.value,<span class="hljs-literal">null</span>,utc8,<span class="hljs-string">'datetime'</span>);
+<span class="hljs-keyword">let</span>  {<span class="hljs-attr">value</span>:__value2,format} = getGlobalizationDateFormatString(__value,utc8,<span class="hljs-string">"UTC+07:00"</span>,<span class="hljs-string">'datetime'</span>);
+
+</code></pre><h2 id="注意事项">注意事项</h2>
+<p>  bee-input-number&gt;2.2.21
   必须安装 moment 对象。</p>
 <h2 id="更新日志">更新日志</h2>
       </div>
