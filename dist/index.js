@@ -17121,7 +17121,7 @@ var getGlobalizationDateFormatString = function getGlobalizationDateFormatString
         }
         if (_glo['timezone']) {
             _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
-            value = getDateFormatString(value, valueUtc, utc ? utc : _glo['timezone'], _format);
+            value = getDateFormatString(value, valueUtc ? valueUtc : _glo['timezone'], utc ? utc : _glo['timezone'], _format);
         }
     });
     return { value: value, format: _format };

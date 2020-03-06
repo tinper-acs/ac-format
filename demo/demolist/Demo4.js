@@ -11,7 +11,7 @@ class Demo4 extends Component {
         super(props);
 
         window.globalization = {
-            timezone: 'UTC+08:00',
+            timezone: 'UTC+07:00',
             locale: 'zh_CN',
             dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy HH:mm:ss', timeFormat: 'HH:mm:ss'}
         }
@@ -21,7 +21,7 @@ class Demo4 extends Component {
     }
 
     render() {
-        let  {value:__value} = getGlobalizationDateFormatString(this.state.value,"UTC+07:00",null,'datetime');
+        let  {value:__value} = getGlobalizationDateFormatString(this.state.value,null,"UTC+08:00",'datetime');
         let  {value:__value2,format} = getGlobalizationDateFormatString(__value,"UTC+08:00","UTC+07:00",'datetime');
         return (
             <div>
