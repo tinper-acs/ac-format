@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getGlobalizationFormatNumber = exports.getGlobalizationDateFormatString = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = exports.initJDiwork = undefined;
+exports.getFromatToFormat = exports.getGlobalizationFormatNumber = exports.getGlobalizationDateFormatString = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = exports.initJDiwork = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16825,7 +16825,7 @@ var defaultFormat = '+ ###,###[.]####';
 var numberFormat = '0000000000000';
 var strFormat = '#############';
 var defaultUtc = 8;
-var dafaultDateFormat = 'YYYY-MM-DD HH:mm:ss';
+var dafaultDateFormat = 'YYYY-MM-DD';
 
 /**
  * 千分位的数量
@@ -17076,9 +17076,7 @@ var getDateFormatString = function getDateFormatString(value, valueUtc) {
 * @param {*} format 上下文时间格式化字符(可忽略)
 * @param {*} toFormat 需要转换出来的格式化时间,默认按照上下文输出即可
  */
-var getGlobalizationDateFormatString = function getGlobalizationDateFormatString(value, valueUtc, utc, dateType, gloformat) {
-    var toFormat = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : dafaultDateFormat;
-
+var getGlobalizationDateFormatString = function getGlobalizationDateFormatString(value, valueUtc, utc, dateType, gloformat, toFormat) {
     var _format = gloformat;
     globalizationDateFormat(function (_glo) {
         _format = gloformat ? gloformat : _glo && _glo.dataformat && _glo.dataformat;
@@ -17158,6 +17156,15 @@ var getjDiworkGlobalization = function getjDiworkGlobalization(don) {
     }, 1000);
 };
 
+/**
+ * 把当前时间字符串 转 制定格式字符串
+ * @param {*} value 
+ * @param {*} valueFormat 
+ * @param {*} toFormat 
+ */
+var getFromatToFormat = function getFromatToFormat(value, valueFormat, toFormat) {
+    return (0, _moment2.default)(value, valueFormat).format(toFormat);
+};
 exports.initJDiwork = initJDiwork;
 exports.getFormatNumber = getFormatNumber;
 exports.getDateFormat = getDateFormat;
@@ -17166,6 +17173,7 @@ exports.getGlobalizationDateFormat = getGlobalizationDateFormat;
 exports.getGlobalizationTimeFormat = getGlobalizationTimeFormat;
 exports.getGlobalizationDateFormatString = getGlobalizationDateFormatString;
 exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
+exports.getFromatToFormat = getFromatToFormat;
 ;
 
 (function () {
@@ -17200,6 +17208,7 @@ exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
     reactHotLoader.register(initJDiwork, 'initJDiwork', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(time, 'time', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getjDiworkGlobalization, 'getjDiworkGlobalization', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(getFromatToFormat, 'getFromatToFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
 })();
 
 ;

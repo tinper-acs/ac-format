@@ -5,7 +5,7 @@ const defaultFormat = '+ ###,###[.]####';
 const numberFormat = '0000000000000';
 const strFormat = '#############';
 const defaultUtc = 8;
-const dafaultDateFormat = 'YYYY-MM-DD HH:mm:ss';
+const dafaultDateFormat = 'YYYY-MM-DD';
 
 /**
  * 千分位的数量
@@ -237,7 +237,7 @@ const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
 * @param {*} format 上下文时间格式化字符(可忽略)
 * @param {*} toFormat 需要转换出来的格式化时间,默认按照上下文输出即可
  */
-const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat,toFormat = dafaultDateFormat) => {
+const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat,toFormat) => {
     let _format = gloformat;
     globalizationDateFormat(_glo=>{
         _format = gloformat?gloformat:_glo && _glo.dataformat && _glo.dataformat;
@@ -316,6 +316,15 @@ const getjDiworkGlobalization = (don) => {
     },1000);
 }
 
+/**
+ * 把当前时间字符串 转 制定格式字符串
+ * @param {*} value 
+ * @param {*} valueFormat 
+ * @param {*} toFormat 
+ */
+const getFromatToFormat = (value,valueFormat,toFormat) => {
+   return moment(value,valueFormat).format(toFormat);
+}
 export {
     initJDiwork,
     getFormatNumber,
@@ -324,5 +333,6 @@ export {
     getGlobalizationDateFormat,
     getGlobalizationTimeFormat,
     getGlobalizationDateFormatString,
-    getGlobalizationFormatNumber
+    getGlobalizationFormatNumber,
+    getFromatToFormat
 };

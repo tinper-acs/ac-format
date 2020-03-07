@@ -5,7 +5,7 @@
  */
 import React, { Component, memo } from 'react';
 import moment from 'moment';
-import {getGlobalizationDateFormatString} from '../../src/index';
+import {getGlobalizationDateFormatString,getFromatToFormat} from '../../src/index';
 class Demo4 extends Component {
 
     constructor(props){
@@ -14,7 +14,7 @@ class Demo4 extends Component {
         window.globalization = {
             timezone: 'UTC+07:00',
             locale: 'zh_CN',
-            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy HH:mm:ss', timeFormat: 'HH:mm:ss'}
+            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
         }
         this.state = {
             value:'2020-02-06 14:30:06'
@@ -41,14 +41,24 @@ class Demo4 extends Component {
         let  {value:newValue6,format:format6} = getGlobalizationDateFormatString(value6,utc8,"UTC+07:00",'datetime',null,toFormat);
 
 
+        let  {value:newValue7,format:format7} = getGlobalizationDateFormatString('2020-02-07 01:00:00',"UTC+08:00",null,'datetime');
+        // let  {value:newValue7,format:format7} = getGlobalizationDateFormatString('2020-02-07 01:00:00',null,"UTC+08:00",'datetime',null,toFormat);
+
+        let value7 = getFromatToFormat('02.06.2020','MM-DD-YYYY','YYYY-MM-DD');
+
         return (
             <div>
                 <h4>上下文 普通时区转换 </h4>
 
                 {this.state.value}(UTC+70:00 转 上下文) : {__value} <br/><br/>
 
-                {__value}(UTC+80:00 转 UTC+70:00) : {__value2} <br/>
+                {__value}(UTC+80:00 转 UTC+70:00) : {__value2} <br/><br/>
 
+            
+                ('2019-11-12',"UTC+08:00","UTC+08:00") == > {newValue7} {format7}
+
+                <h4>普通时区转换公共方法 </h4>
+                02.06.2020 'MM-DD-YYYY' to 'YYYY-MM-DD' {value7}
 
                 <h4>上下文 高级转换(MM-DD-YYYY)</h4>
                 <span>格式为: {format3} 的 {value3} 上下文时区 转成 {window.globalization.timezone} 区, 格式为: {toFormat} </span>
