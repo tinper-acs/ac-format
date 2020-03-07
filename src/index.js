@@ -6,6 +6,8 @@ const numberFormat = '0000000000000';
 const strFormat = '#############';
 const defaultUtc = 8;
 const dafaultDateFormat = 'YYYY-MM-DD';
+const dafaultTimeDateFormat = dafaultDateFormat+" HH:mm:ss";
+
 
 /**
  * 千分位的数量
@@ -222,7 +224,7 @@ const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
  */
 const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
     if (!value) return null;
-    let _value = format?moment(value).format(format):value;//(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
+    let _value = format?moment(value,format).format(dafaultTimeDateFormat):value;//(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value,valueUtc,utc);
     _value = format?moment(_value).format(format):_value;
     return _value;
@@ -237,21 +239,27 @@ const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
 * @param {*} format 上下文时间格式化字符(可忽略)
 * @param {*} toFormat 需要转换出来的格式化时间,默认按照上下文输出即可
  */
-const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat,toFormat) => {
-    let _format = gloformat;
+const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat ,toFormat) => {
+    let _format = gloformat?gloformat:dafaultTimeDateFormat;
     globalizationDateFormat(_glo=>{
-        _format = gloformat?gloformat:_glo && _glo.dataformat && _glo.dataformat;
+        let _gloDataformat = _glo && _glo.dataformat && _glo.dataformat;
         if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
-            _format = gloformat?gloformat:_format['dateTimeFormat'];
+            _format = gloformat?gloformat:_gloDataformat['dateTimeFormat'];
+            toFormat = toFormat?toFormat:_gloDataformat['dateTimeFormat'];
         }else{
-            _format = gloformat?gloformat:_format['dateFormat'];
+            _format = gloformat?gloformat:_gloDataformat['dateFormat'];
+            toFormat = toFormat?toFormat:_gloDataformat['dateFormat'];
         }
         if(_glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
             value = getDateFormatString(value,valueUtc?valueUtc:_glo['timezone'],utc?utc:_glo['timezone'],_format);
         }
-        value = value && toFormat?moment(moment(value,_format)).format(toFormat):value;
+        if(toFormat){
+            toFormat = toFormat && toFormat.replace("yyyy","YYYY").replace("dd","DD");
+        }
+        value = value && toFormat?moment(value,_format).format(toFormat):value;
     });
+    console.log(" value-- ",value);
     return {value,format:_format};
 }
 

@@ -16825,7 +16825,7 @@ var defaultFormat = '+ ###,###[.]####';
 var numberFormat = '0000000000000';
 var strFormat = '#############';
 var defaultUtc = 8;
-var dafaultDateFormat = 'YYYY-MM-DD';
+var dafaultDateFormat = 'YYYY-MM-DD HH:mm:ss';
 
 /**
  * 千分位的数量
@@ -17061,7 +17061,7 @@ var getDateFormatString = function getDateFormatString(value, valueUtc) {
     var format = arguments[3];
 
     if (!value) return null;
-    var _value = format ? (0, _moment2.default)(value).format(format) : value; //(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
+    var _value = format ? (0, _moment2.default)(value).format(dafaultDateFormat) : value; //(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value, valueUtc, utc);
     _value = format ? (0, _moment2.default)(_value).format(format) : _value;
     return _value;

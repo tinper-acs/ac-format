@@ -14,7 +14,7 @@ class Demo4 extends Component {
         window.globalization = {
             timezone: 'UTC+07:00',
             locale: 'zh_CN',
-            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
+            dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
         }
         this.state = {
             value:'2020-02-06 14:30:06'
@@ -40,10 +40,11 @@ class Demo4 extends Component {
         let value6 = '02.06.2020 00:00:00';// 2020 年、2月、6日 14:30:06
         let  {value:newValue6,format:format6} = getGlobalizationDateFormatString(value6,utc8,"UTC+07:00",'datetime',null,toFormat);
 
-
-        let  {value:newValue7,format:format7} = getGlobalizationDateFormatString('2020-02-07 01:00:00',"UTC+08:00",null,'datetime');
-        // let  {value:newValue7,format:format7} = getGlobalizationDateFormatString('2020-02-07 01:00:00',null,"UTC+08:00",'datetime',null,toFormat);
-
+        let valuFormat = toFormat;
+        let  {value:newValue7,format:format7} = getGlobalizationDateFormatString('2020-02-07 01:00:00',"UTC+08:00",null,'datetime',valuFormat);
+        let  {value:newValue7_1,format:format7_1} = getGlobalizationDateFormatString('02-07-2020 01:00:00',"UTC+08:00",null,'datetime','MM-DD-YYYY HH:mm:ss');
+        let  {value:newValue7_2,format:format7_2} = getGlobalizationDateFormatString('07-02-2020 01:00:00',"UTC+08:00",null,'datetime','DD-MM-YYYY HH:mm:ss');
+        console.log(newValue7_1,newValue7_2);
         let value7 = getFromatToFormat('02.06.2020','MM-DD-YYYY','YYYY-MM-DD');
 
         return (
