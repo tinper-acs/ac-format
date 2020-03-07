@@ -300,26 +300,26 @@ const getjDiworkGlobalization = (don) => {
     if(window.globalization && window.globalization.dataformat){
         return don(window.globalization);
     }
-    initJDiwork();
+    if (!window.jDiwork) { 
+        console.log("jDiwork.getContext 不存在 !");
+        initJDiwork();
+    }
     time = setInterval(function(){
-        if (!window.jDiwork || !window.jDiwork.getContext) {
-            try {
-                jDiwork.getContext(function (arg) {
-                    clearInterval(time);
-                    window.globalization = {
-                        "locale": arg.locale,
-                        "sysLocale": arg.sysLocale,
-                        "multilist": JSON.parse(arg.multilist),
-                        "timezone": arg.timezone,
-                        "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
-                    }
-                    don(window.globalization);
-                });
-            } catch (error) {
-                console.log("获取上下文异常!",error);
-            }
-        }else{
-            console.log("jDiwork.getContext 不存在 !");
+        try {
+            if(!window.jDiwork.getContext)return;
+            window.jDiwork.getContext(function (arg) {
+                clearInterval(time);
+                window.globalization = {
+                    "locale": arg.locale,
+                    "sysLocale": arg.sysLocale,
+                    "multilist": JSON.parse(arg.multilist),
+                    "timezone": arg.timezone,
+                    "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
+                }
+                don(window.globalization);
+            });
+        } catch (error) {
+            console.log("获取上下文异常!",error);
         }
     },1000);
 }
