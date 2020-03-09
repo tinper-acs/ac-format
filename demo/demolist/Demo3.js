@@ -19,11 +19,11 @@ class Demo3 extends Component {
     constructor(props){
         super(props);
 
-        window.globalization = {
-            timezone: 'UTC+9:00',
-            locale: 'zh_CN',
-            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
-        }
+        // window.globalization = {
+        //     timezone: 'UTC+9:00',
+        //     locale: 'zh_CN',
+        //     dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
+        // }
         this.state = {
             value:'2020/02/06,14:30:06'
         }

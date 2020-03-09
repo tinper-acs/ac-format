@@ -180,7 +180,7 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
         }else{
             _format = _format &&_format['dateFormat']?_format['dateFormat']:null;
         }
-        if(_glo['timezone']){
+        if(_glo && _glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
             _value = getDateFormat(value,utc?utc:_glo['timezone'],_format);
         }
@@ -244,13 +244,13 @@ const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat 
     globalizationDateFormat(_glo=>{
         let _gloDataformat = _glo && _glo.dataformat && _glo.dataformat;
         if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
-            _format = gloformat?gloformat:_gloDataformat['dateTimeFormat'];
-            toFormat = toFormat?toFormat:_gloDataformat['dateTimeFormat'];
+            _format = gloformat?gloformat:_gloDataformat && _gloDataformat['dateTimeFormat'];
+            toFormat = toFormat?toFormat:_gloDataformat && _gloDataformat['dateTimeFormat'];
         }else{
-            _format = gloformat?gloformat:_gloDataformat['dateFormat'];
-            toFormat = toFormat?toFormat:_gloDataformat['dateFormat'];
+            _format = gloformat?gloformat:_gloDataformat && _gloDataformat['dateFormat'];
+            toFormat = toFormat?toFormat:_gloDataformat && _gloDataformat['dateFormat'];
         }
-        if(_glo['timezone']){
+        if(_glo && _glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
             value = getDateFormatString(value,valueUtc?valueUtc:_glo['timezone'],utc?utc:_glo['timezone'],_format);
         }
@@ -274,7 +274,7 @@ const getGlobalizationTimeFormat = (value,utc,resultType = null) => {
     let _format = null;
     globalizationDateFormat(_glo=>{
         _format = _glo && _glo.dataformat?_glo.dataformat.timeFormat:null;
-        if(_glo['timezone']){
+        if(_glo && _glo['timezone']){
             _value = getTimeFormat(value,utc?utc:_glo['timezone'],_format,resultType).value;
         }
     });
@@ -295,34 +295,45 @@ const initJDiwork = () => {
     document.querySelector("body").appendChild(script);
 }
 
-let time = null;
 const getjDiworkGlobalization = (don) => {
     if(window.globalization && window.globalization.dataformat){
         return don(window.globalization);
     }
     if (!window.jDiwork) { 
         console.log("jDiwork.getContext 不存在 !");
-        initJDiwork();
+        return don(null);
     }
-    time = setInterval(function(){
-        try {
-            if(!window.jDiwork.getContext)return;
-            window.jDiwork.getContext(function (arg) {
-                clearInterval(time);
-                window.globalization = {
-                    "locale": arg.locale,
-                    "sysLocale": arg.sysLocale,
-                    "multilist": JSON.parse(arg.multilist),
-                    "timezone": arg.timezone,
-                    "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
-                }
-                don(window.globalization);
-            });
-        } catch (error) {
-            console.log("获取上下文异常!",error);
-        }
-    },1000);
 }
+
+
+// let time = null;
+// const getjDiworkGlobalization_bak = (don) => {
+//     if(window.globalization && window.globalization.dataformat){
+//         return don(window.globalization);
+//     }
+//     if (!window.jDiwork) { 
+//         console.log("jDiwork.getContext 不存在 !");
+//         initJDiwork();
+//     }
+//     time = setInterval(function(){
+//         try {
+//             if(!window.jDiwork.getContext)return;
+//             window.jDiwork.getContext(function (arg) {
+//                 clearInterval(time);
+//                 window.globalization = {
+//                     "locale": arg.locale,
+//                     "sysLocale": arg.sysLocale,
+//                     "multilist": JSON.parse(arg.multilist),
+//                     "timezone": arg.timezone,
+//                     "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
+//                 }
+//                 don(window.globalization);
+//             });
+//         } catch (error) {
+//             console.log("获取上下文异常!",error);
+//         }
+//     },1000);
+// }
 
 /**
  * 把当前时间字符串 转 制定格式字符串

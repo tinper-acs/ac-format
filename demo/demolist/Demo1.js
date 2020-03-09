@@ -14,11 +14,11 @@ class Demo1 extends Component {
     constructor(props) {
         super(props);
 
-        window.globalization = {
-            timezone: 'UTC-10:00',
-            locale: 'zh_CN',
-            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
-        }
+        // window.globalization = {
+        //     timezone: 'UTC-10:00',
+        //     locale: 'zh_CN',
+        //     dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
+        // }
 
         let value = '-10000003.1415926',
         value1 = '10000003.1415926';
