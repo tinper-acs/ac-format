@@ -72,7 +72,7 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 
 |API|说明|类型|默认值/参数|
 |:--|:---:|:--:|---:|
-initJDiwork             | CN 项目追加diwok 上下文   | function | - |
+initJDiwork             | 获取上下文，在项目初始化的时候调用 | function(don) | 把业务逻辑写在回调中，必须有上下文，否则项目上给默认值 |
 getFormatNumber |多格式转换   |function(格式,值)| - | 
 getDateFormat  |多时区，转moment对象|function(值,时区,格式)|- |
 getTimeFormat  |多时区，转string 显示对象  |function(值,时区,格式,返回值)| -|

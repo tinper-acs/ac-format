@@ -17128,50 +17128,43 @@ var getGlobalizationFormatNumber = function getGlobalizationFormatNumber(value) 
     return value;
 };
 
-var initJDiwork = function initJDiwork() {
-    var script = document.createElement("script");
-    script.src = '//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js';
-    document.querySelector("body").appendChild(script);
+// script.src = '//cdn.yonyoucloud.com/pro/diwork/download/jDiwork.js';
+var time = null;
+var initJDiwork = function initJDiwork(don) {
+    try {
+        window.jDiwork.getContext(function (arg) {
+            if (arg && arg.dataformat && arg.timezone) {
+                time && clearInterval(time);
+                time = null;
+                window.globalization = {
+                    "locale": arg.locale,
+                    "sysLocale": arg.sysLocale,
+                    "multilist": JSON.parse(arg.multilist),
+                    "timezone": arg.timezone,
+                    "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
+                };
+                don(window.globalization);
+            } else {
+                time = setInterval(function () {
+                    initJDiwork();
+                }, 1000);
+            }
+        });
+    } catch (error) {
+        console.log("获取上下文异常!", error);
+        don(null);
+    }
 };
 
 var getjDiworkGlobalization = function getjDiworkGlobalization(don) {
     if (window.globalization && window.globalization.dataformat) {
         return don(window.globalization);
     }
-    if (!window.jDiwork) {
+    if (!window.jDiwork || !window.jDiwork.getContext) {
         console.log("jDiwork.getContext 不存在 !");
         return don(null);
     }
 };
-
-// let time = null;
-// const getjDiworkGlobalization_bak = (don) => {
-//     if(window.globalization && window.globalization.dataformat){
-//         return don(window.globalization);
-//     }
-//     if (!window.jDiwork) { 
-//         console.log("jDiwork.getContext 不存在 !");
-//         initJDiwork();
-//     }
-//     time = setInterval(function(){
-//         try {
-//             if(!window.jDiwork.getContext)return;
-//             window.jDiwork.getContext(function (arg) {
-//                 clearInterval(time);
-//                 window.globalization = {
-//                     "locale": arg.locale,
-//                     "sysLocale": arg.sysLocale,
-//                     "multilist": JSON.parse(arg.multilist),
-//                     "timezone": arg.timezone,
-//                     "dataformat": arg.dataformat ? JSON.parse(arg.dataformat) : arg.dataformat
-//                 }
-//                 don(window.globalization);
-//             });
-//         } catch (error) {
-//             console.log("获取上下文异常!",error);
-//         }
-//     },1000);
-// }
 
 /**
  * 把当前时间字符串 转 制定格式字符串
@@ -17223,6 +17216,7 @@ exports.getFromatToFormat = getFromatToFormat;
     reactHotLoader.register(getGlobalizationDateFormatString, 'getGlobalizationDateFormatString', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getGlobalizationTimeFormat, 'getGlobalizationTimeFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getGlobalizationFormatNumber, 'getGlobalizationFormatNumber', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
+    reactHotLoader.register(time, 'time', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(initJDiwork, 'initJDiwork', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getjDiworkGlobalization, 'getjDiworkGlobalization', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
     reactHotLoader.register(getFromatToFormat, 'getFromatToFormat', '/Users/jony/workspaces/yonyou/lang/ac-format/src/index.js');
