@@ -11,11 +11,11 @@ class Demo4 extends Component {
     constructor(props){
         super(props);
 
-        window.globalization = {
-            timezone: 'UTC+07:00',
-            locale: 'zh_CN',
-            dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
-        }
+        // window.globalization = {
+        //     timezone: 'UTC+07:00',
+        //     locale: 'zh_CN',
+        //     dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
+        // }
         this.state = {
             value:'2020-02-06 14:30:06'
         }
@@ -62,22 +62,22 @@ class Demo4 extends Component {
                 02.06.2020 'MM-DD-YYYY' to 'YYYY-MM-DD' {value7}
 
                 <h4>上下文 高级转换(MM-DD-YYYY)</h4>
-                <span>格式为: {format3} 的 {value3} 上下文时区 转成 {window.globalization.timezone} 区, 格式为: {toFormat} </span>
+                <span>格式为: {format3} 的 {value3} 上下文时区 转成 {window.globalization && window.globalization.timezone} 区, 格式为: {toFormat} </span>
                 <span>值为: {newValue3}</span>
 
 
                 <h4>上下文 高级转换(DD-MM-YYYY)</h4>
-                <span>格式为: {format4} 的 {value4} 上下文时区 转成 {window.globalization.timezone} 区, 格式为: {toFormat} </span>
+                <span>格式为: {format4} 的 {value4} 上下文时区 转成 {window.globalization && window.globalization.timezone} 区, 格式为: {toFormat} </span>
                 <span>值为: {newValue4}</span>
 
 
                 <h4>上下文 高级转换(DD-MM-YYYY)反转</h4>
-                <span>格式为: {format5} 的 {value5} {utc8} 转成 {window.globalization.timezone} 区, 格式为: {toFormat} </span>
+                <span>格式为: {format5} 的 {value5} {utc8} 转成 {window.globalization && window.globalization.timezone} 区, 格式为: {toFormat} </span>
                 <span>值为: {newValue5}</span>
 
 
                 <h4>上下文 高级转换(MM-DD-YYYY) 零界值 </h4>
-                <span>格式为: {format6} 的 {value6} {utc8} 转成 {window.globalization.timezone} 区, 格式为: {toFormat} </span>
+                <span>格式为: {format6} 的 {value6} {utc8} 转成 {window.globalization && window.globalization.timezone} 区, 格式为: {toFormat} </span>
                 <span>值为: {newValue6}</span>
 
             </div>
