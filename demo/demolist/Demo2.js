@@ -9,7 +9,7 @@ import {getDateFormat,getTimeFormat } from '../../src/index';
 import DatePicker from "bee-datepicker";
 import Timepicker from "bee-timepicker";
 
-const format = "YYYY-MM-DD HH:mm:ss";
+const format = "YYYY-MM-DD HH:mm:ss TT";
 const dateInputPlaceholder = "选择日期";
 
 class Demo2 extends Component {
@@ -17,31 +17,27 @@ class Demo2 extends Component {
     constructor(props){
         super(props);
         this.state = {
-            value:'2020/02/06,14:30:06'
+            value:'2020-02-06 14:30:06'
         }
     }
 
     
     onChange = (d, dataString) => {
-        let ut8 = getDateFormat(d,"UTC+8:00",format);
+        let ut8 = getDateFormat(d,"UTC+08:00",format);
         console.log("ut8:",ut8)
     }; 
      
 
     render() {
-        let ut8 = getDateFormat(this.state.value,"UTC+8:00");
-        let showValue = getDateFormat(ut8,"UTC+9:00");
+        let ut8 = getDateFormat(this.state.value,"UTC+08:00");
+        let showValue =  getDateFormat(ut8,"UTC+09:00");
 
         let _t = '20:19:59';
+        let {value:timeValue,format:timeFormat} = getTimeFormat(_t,'UTC+08:00','UTC-10:00','HH:mm:ss TT');
 
-        let {value:timeValue,format:timeFormat} = getTimeFormat(_t,'UTC-10:00','hh:mm:ss a');
-
-        let utc8 = getTimeFormat(_t,'UT+8:00').value;
-
-        console.log(utc8+" ====time===== ",timeValue);
         return (
             <div>
-                {this.state.value}(UTC+9:00) :[编辑态]
+                {this.state.value}(UTC+09:00) :[编辑态]
                 <DatePicker
                     format={format} 
                     onChange={this.onChange}
@@ -50,7 +46,7 @@ class Demo2 extends Component {
                 />
                 <br/><br/>
 
-                {this.state.value}(UTC-10:00) :[浏览态]
+                {this.state.value}(UTC-10:00) :[浏览态] 999 
                 {getDateFormat(this.state.value,"UTC-10:00",format)}
 
                 <br/>  <br/>
@@ -64,7 +60,7 @@ class Demo2 extends Component {
                     onChange={(a,b)=>{
                         console.log(" --- ",a);
                     }}
-                    use12Hours
+                    use12Hours={timeFormat.indexOf("H") !== -1?true:false}
                 />
             </div>
         );

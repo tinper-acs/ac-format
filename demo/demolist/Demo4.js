@@ -25,8 +25,8 @@ class Demo4 extends Component {
         let toFormat = 'YYYY-MM-DD HH:mm:ss';
         let utc8 = "UTC+08:00";
 
-        let  {value:__value} = getGlobalizationDateFormatString(this.state.value,null,utc8,'datetime');
-        let  {value:__value2,format} = getGlobalizationDateFormatString(__value,utc8,"UTC+07:00",'datetime');
+        let  {value:__value} = getGlobalizationDateFormatString(this.state.value,"UTC+07:00",utc8,'datetime',toFormat,toFormat);
+        let  {value:__value2,format} = getGlobalizationDateFormatString(__value,utc8,null,'datetime',toFormat,toFormat);
   
         let value3 = '2-6-2020 14:30:06';// 2020 年、2月、6日 14:30:06
         let  {value:newValue3,format:format3} = getGlobalizationDateFormatString(value3,null,utc8,'datetime',null,toFormat);
@@ -54,8 +54,7 @@ class Demo4 extends Component {
                 {this.state.value}(UTC+70:00 转 上下文) : {__value} <br/><br/>
 
                 {__value}(UTC+80:00 转 UTC+70:00) : {__value2} <br/><br/>
-
-            
+ 
                 ('2019-11-12',"UTC+08:00","UTC+08:00") == > {newValue7} {format7}
 
                 <h4>普通时区转换公共方法 </h4>

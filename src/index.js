@@ -137,9 +137,11 @@ const getTimeFormat = (value,valueUtc = 'UTC+08:00', utc = 'UTC+08:00', format =
   if(value.indexOf(":") === -1)return value;
   if (utc.indexOf("UTC") === -1) return value;
   //24小时制进行处理
-  format = format && format.replace("hh","HH").replace("TT","").replace("tt","").trim();
+  let _format = format && format.replace("hh","HH").replace("TT","").replace("tt","").trim();
   let _value = getDateUTCString("2020-02-03 "+value,valueUtc,utc);
-  return resultType?moment(_value).format(format):moment(_value).locale("en");
+  _value = moment(_value);
+  _value = resultType?_value.format(_format):_value;//.locale("en");
+  return {value:_value,format:format && format.replace("TT","A").replace("tt","a")};
 }
 
 const dataformat = {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'};
@@ -274,7 +276,7 @@ const getGlobalizationTimeFormat = (value,valueUtc,utc,resultType = null) => {
     globalizationDateFormat(_glo=>{
         _format = _glo && _glo.dataformat?_glo.dataformat.timeFormat:null;
         if(_glo && _glo['timezone']){
-            _value = getTimeFormat(value,valueUtc,utc?utc:_glo['timezone'],_format,resultType);
+            _value = getTimeFormat(value,valueUtc,utc?utc:_glo['timezone'],_format,resultType).value;
         }
     });
     _format = _format && _format.replace("TT","A").replace("tt","a").trim();
