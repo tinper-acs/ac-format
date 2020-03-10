@@ -39,14 +39,14 @@ class Demo2 extends Component {
             <div>
                 {this.state.value}(UTC+09:00) :[编辑态]
                 <DatePicker
-                    format={format} 
+                    format={format.replace("TT","A").replace("tt","a")} 
                     onChange={this.onChange}
                     value={showValue} 
                     showTime={true} 
                 />
                 <br/><br/>
 
-                {this.state.value}(UTC-10:00) :[浏览态] 999 
+                {this.state.value}(UTC-10:00) :[浏览态]  
                 {getDateFormat(this.state.value,"UTC-10:00",format)}
 
                 <br/>  <br/>
