@@ -8,6 +8,15 @@ const defaultUtc = 8;
 const dafaultDateFormat = 'YYYY-MM-DD';
 const dafaultTimeDateFormat = dafaultDateFormat+" HH:mm:ss";
 
+moment.updateLocale('zh-cn', {
+    meridiem : function (hour, minute, isLowercase) {
+        if (hour < 13) {
+            return isLowercase?"am":"AM";
+        } else {
+            return isLowercase?"pm":"PM";
+        }
+    }
+});
 
 /**
  * 千分位的数量
@@ -118,7 +127,7 @@ const getDateFormat = (value, utc = 'UTC+08:00', format) => {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy","YYYY").replace("dd","DD");
-        format = format && format.replace("TT","").replace("tt","").trim();
+        format = format && format.replace("TT","A").replace("tt","a").trim();
         format = format && format.replace("hh","HH");//所有的时间，都按照24小时制来处理。
         return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
     } else {
@@ -139,8 +148,8 @@ const getTimeFormat = (value,valueUtc = 'UTC+08:00', utc = 'UTC+08:00', format =
   //24小时制进行处理
   let _format = format && format.replace("hh","HH").replace("TT","").replace("tt","").trim();
   let _value = getDateUTCString("2020-02-03 "+value,valueUtc,utc);
-  _value = moment(_value);
-  _value = resultType?_value.format(_format):_value;//.locale("en");
+  _value = moment(_value);//.locale('en');
+  _value = resultType?_value.format(_format):_value;
   return {value:_value,format:format && format.replace("TT","A").replace("tt","a")};
 }
 
@@ -170,15 +179,15 @@ const globalizationDateFormat = (result) => {
  * @param {*} dateType 转换类型,是date、还是dateTime
  * @param {*} resultType  返回数据类型
  */
-const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
+const getGlobalizationDateFormat = (value,utc,dateType,format,resultType = null) => {
     let _value = resultType?value:moment(value);
-    let _format = null;
+    let _format = format;
     globalizationDateFormat(_glo=>{
         _format = _glo && _glo.dataformat && _glo.dataformat;
         if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
-            _format = _format && _format['dateTimeFormat']?_format['dateTimeFormat']:null;
+            _format = format?format:_format && _format['dateTimeFormat']?_format['dateTimeFormat']:null;
         }else{
-            _format = _format &&_format['dateFormat']?_format['dateFormat']:null;
+            _format = format?format:_format &&_format['dateFormat']?_format['dateFormat']:null;
         }
         if(_glo && _glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
@@ -327,7 +336,6 @@ const getjDiworkGlobalization = (don) => {
         return don(null);
     }
 }
-
 /**
  * 把当前时间字符串 转 制定格式字符串
  * @param {*} value 
