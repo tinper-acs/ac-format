@@ -19,32 +19,31 @@ class Demo3 extends Component {
     constructor(props){
         super(props);
 
-        // window.globalization = {
-        //     timezone: 'UTC+9:00',
-        //     locale: 'zh_CN',
-        //     dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'}
-        // }
+        window.globalization = {
+            timezone: 'UTC+07:00',
+            locale: 'zh_CN',
+            dataformat: {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss TT', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss tt'}
+        }
         this.state = {
-            value:'2020/02/06,14:30:06'
+            value:'2020-02-06 14:30:06'
         }
     }
  
     onChange = (d, dataString) => {
-        let ut8 = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+8:00",true);
+        let ut8 = getGlobalizationDateFormat(d,'datetime',"UTC+08:00",true);
         console.log(ut8)
     }; 
 
     render() {
-        let  __value = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+8:00",true);
+        let  {value:__value} = getGlobalizationDateFormat(this.state.value,'datetime',"UTC+08:00",true);
         let {value,format} = getGlobalizationDateFormat(__value,'datetime');
 
-        let _t = '20:19:59'; 
-        let ut8 = getGlobalizationTimeFormat(_t,"UTC+8:00",true).value;
-        let {value:timeValue,format:timeFormat} = getGlobalizationTimeFormat(ut8);
+        let _t = '20:19:59';  
+        let {value:timeValue,format:timeFormat} = getGlobalizationTimeFormat(_t,"UTC+08:00",null);
         timeFormat = timeFormat?timeFormat:'HH:mm:ss';
         return (
             <div>
-                {this.state.value}(UTC+90:00) :[编辑态]
+                {this.state.value}(UTC+09:00) :[编辑态] {format}
                 <DatePicker
                     format={format?format:defaultFormat}
                     onChange={this.onChange}
@@ -53,8 +52,8 @@ class Demo3 extends Component {
                 />
                 <br/><br/>
 
-                {this.state.value}(UTC-10:00) 333:[浏览态]
-                {getGlobalizationDateFormat(this.state.value,'datetime',"UTC+9:00",true).value}
+                {this.state.value}(UTC-10:00):[浏览态]
+                {getGlobalizationDateFormat(this.state.value,'datetime',"UTC+09:00",true).value}
 
                 <br/>  <br/>
 
@@ -64,10 +63,7 @@ class Demo3 extends Component {
                     showSecond={false}
                     value={timeValue}
                     placeholder="选择时间"
-                    onChange={(a,b)=>{
-                        console.log(" --- ",a);
-                    }}
-                    use12Hours
+                    use12Hours={timeFormat.indexOf("H") !== -1?true:false}
                 />
             </div>
         );

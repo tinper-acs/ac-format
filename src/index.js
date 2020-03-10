@@ -118,31 +118,28 @@ const getDateFormat = (value, utc = 'UTC+08:00', format) => {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy","YYYY").replace("dd","DD");
+        format = format && format.replace("TT","").replace("tt","").trim();
+        format = format && format.replace("hh","HH");//所有的时间，都按照24小时制来处理。
         return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
     } else {
         return moment(value).utcOffset(getOffsetMinute(utc));
     }
 }
 
-const getTimeFormat = (value, utc = 'UTC+08:00', format ="hh:mm:ss",resultType) => {
+/**
+ * 处理时分秒的数据。 
+ * @param {*} value 
+ * @param {*} utc 
+ * @param {*} format  必须是24小时制，进行处理。
+ * @param {*} resultType 
+ */
+const getTimeFormat = (value,valueUtc = 'UTC+08:00', utc = 'UTC+08:00', format ="HH:mm:ss",resultType) => {
   if(value.indexOf(":") === -1)return value;
   if (utc.indexOf("UTC") === -1) return value;
-  let sym = utc.indexOf("+") != -1 ? "+" : "-";
-
-  let values = value.split(":");
- 
-  let currUtc = Number((sym + utc.split(sym)[1].split(":")[0] ));
- 
-  let hours = Number(values[0]) - (defaultUtc - currUtc);
-  hours = hours < 0?hours+24:hours;
-
-  hours =  value.replace(values[0],hours);
-  
-  hours = format?moment(hours,format):hours;
- 
-  hours = resultType?hours.format("hh:mm:ss"):hours;
-
-  return {value:hours,format};
+  //24小时制进行处理
+  format = format && format.replace("hh","HH").replace("TT","").replace("tt","").trim();
+  let _value = getDateUTCString("2020-02-03 "+value,valueUtc,utc);
+  return resultType?moment(_value).format(format):moment(_value).locale("en");
 }
 
 const dataformat = {dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss'};
@@ -164,6 +161,7 @@ const globalizationDateFormat = (result) => {
     // }
     // return result(globalization);
 }
+
 /**
  * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
  * @param {*} value 
@@ -174,7 +172,7 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
     let _value = resultType?value:moment(value);
     let _format = null;
     globalizationDateFormat(_glo=>{
-        _format = resultType?_glo && _glo.dataformat && _glo.dataformat:null;
+        _format = _glo && _glo.dataformat && _glo.dataformat;
         if(dateType && dateType.toLocaleLowerCase() ==="datetime"){
             _format = _format && _format['dateTimeFormat']?_format['dateTimeFormat']:null;
         }else{
@@ -182,9 +180,10 @@ const getGlobalizationDateFormat = (value,dateType,utc,resultType = null) => {
         }
         if(_glo && _glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
-            _value = getDateFormat(value,utc?utc:_glo['timezone'],_format);
+            _value = getDateFormat(value,utc?utc:_glo['timezone'],resultType?_format:null);
         }
     });
+    _format = _format && _format.replace("TT","A").replace("tt","a").trim();
     return {value:_value,format:_format};
 }
 const getStrUtcNum = (utc = 'UTC+08:00') =>{
@@ -269,15 +268,16 @@ const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat 
  * @param {*} value 
  * @param {*} resultType  返回数据类型
  */
-const getGlobalizationTimeFormat = (value,utc,resultType = null) => {
-    let _value = resultType?value:moment(value);
+const getGlobalizationTimeFormat = (value,valueUtc,utc,resultType = null) => {
+    let _value = value;//resultType?value:moment(value);
     let _format = null;
     globalizationDateFormat(_glo=>{
         _format = _glo && _glo.dataformat?_glo.dataformat.timeFormat:null;
         if(_glo && _glo['timezone']){
-            _value = getTimeFormat(value,utc?utc:_glo['timezone'],_format,resultType).value;
+            _value = getTimeFormat(value,valueUtc,utc?utc:_glo['timezone'],_format,resultType);
         }
     });
+    _format = _format && _format.replace("TT","A").replace("tt","a").trim();
     return {value:_value,format:_format};
 }
 
@@ -338,11 +338,13 @@ const getFromatToFormat = (value,valueFormat,toFormat) => {
 export {
     initJDiwork,
     getFormatNumber,
+    getGlobalizationFormatNumber,
+    getFromatToFormat,
+
     getDateFormat,
     getTimeFormat,
     getGlobalizationDateFormat,
+
     getGlobalizationTimeFormat,
     getGlobalizationDateFormatString,
-    getGlobalizationFormatNumber,
-    getFromatToFormat
 };
