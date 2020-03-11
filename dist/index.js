@@ -16800,7 +16800,7 @@ module.exports = function(module) {
 /* WEBPACK VAR INJECTION */(function(module) {
 
 exports.__esModule = true;
-exports.getFromatToFormat = exports.getGlobalizationFormatNumber = exports.getGlobalizationDateFormatString = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFormatNumber = exports.initJDiwork = undefined;
+exports.getGlobalizationDateFormatString = exports.getGlobalizationTimeFormat = exports.getGlobalizationDateFormat = exports.getTimeFormat = exports.getDateFormat = exports.getFromatToFormat = exports.getGlobalizationFormatNumber = exports.getFormatNumber = exports.initJDiwork = undefined;
 
 var _formatNumber = __webpack_require__(130);
 
@@ -16827,6 +16827,16 @@ var strFormat = '#############';
 var defaultUtc = 8;
 var dafaultDateFormat = 'YYYY-MM-DD';
 var dafaultTimeDateFormat = dafaultDateFormat + " HH:mm:ss";
+
+_moment2.default.updateLocale('zh-cn', {
+    meridiem: function meridiem(hour, minute, isLowercase) {
+        if (hour < 13) {
+            return isLowercase ? "am" : "AM";
+        } else {
+            return isLowercase ? "pm" : "PM";
+        }
+    }
+});
 
 /**
  * 千分位的数量
@@ -16942,35 +16952,35 @@ var getDateFormat = function getDateFormat(value) {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy", "YYYY").replace("dd", "DD");
+        format = format && format.replace("TT", "A").replace("tt", "a").trim();
+        format = format && format.replace("hh", "HH"); //所有的时间，都按照24小时制来处理。
         return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)).format(format);
     } else {
         return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc));
     }
 };
 
+/**
+ * 处理时分秒的数据。 
+ * @param {*} value 
+ * @param {*} utc 
+ * @param {*} format  必须是24小时制，进行处理。
+ * @param {*} resultType 
+ */
 var getTimeFormat = function getTimeFormat(value) {
-    var utc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+08:00';
-    var format = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "hh:mm:ss";
-    var resultType = arguments[3];
+    var valueUtc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'UTC+08:00';
+    var utc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'UTC+08:00';
+    var format = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : "HH:mm:ss";
+    var resultType = arguments[4];
 
     if (value.indexOf(":") === -1) return value;
     if (utc.indexOf("UTC") === -1) return value;
-    var sym = utc.indexOf("+") != -1 ? "+" : "-";
-
-    var values = value.split(":");
-
-    var currUtc = Number(sym + utc.split(sym)[1].split(":")[0]);
-
-    var hours = Number(values[0]) - (defaultUtc - currUtc);
-    hours = hours < 0 ? hours + 24 : hours;
-
-    hours = value.replace(values[0], hours);
-
-    hours = format ? (0, _moment2.default)(hours, format) : hours;
-
-    hours = resultType ? hours.format("hh:mm:ss") : hours;
-
-    return { value: hours, format: format };
+    //24小时制进行处理
+    var _format = format && format.replace("hh", "HH").replace("TT", "").replace("tt", "").trim();
+    var _value = getDateUTCString("2020-02-03 " + value, valueUtc, utc);
+    _value = (0, _moment2.default)(_value); //.locale('en');
+    _value = resultType ? _value.format(_format) : _value;
+    return { value: _value, format: format && format.replace("TT", "A").replace("tt", "a") };
 };
 
 var dataformat = { dateTimeFormat: 'MM-dd-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM.DD.YYYY', timeFormat: 'HH:mm:ss' };
@@ -16992,29 +17002,31 @@ var globalizationDateFormat = function globalizationDateFormat(result) {
     // }
     // return result(globalization);
 };
+
 /**
  * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
  * @param {*} value 
  * @param {*} dateType 转换类型,是date、还是dateTime
  * @param {*} resultType  返回数据类型
  */
-var getGlobalizationDateFormat = function getGlobalizationDateFormat(value, dateType, utc) {
-    var resultType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+var getGlobalizationDateFormat = function getGlobalizationDateFormat(value, utc, dateType, format) {
+    var resultType = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
 
     var _value = resultType ? value : (0, _moment2.default)(value);
-    var _format = null;
+    var _format = format;
     globalizationDateFormat(function (_glo) {
-        _format = resultType ? _glo && _glo.dataformat && _glo.dataformat : null;
+        _format = _glo && _glo.dataformat && _glo.dataformat;
         if (dateType && dateType.toLocaleLowerCase() === "datetime") {
-            _format = _format && _format['dateTimeFormat'] ? _format['dateTimeFormat'] : null;
+            _format = format ? format : _format && _format['dateTimeFormat'] ? _format['dateTimeFormat'] : null;
         } else {
-            _format = _format && _format['dateFormat'] ? _format['dateFormat'] : null;
+            _format = format ? format : _format && _format['dateFormat'] ? _format['dateFormat'] : null;
         }
         if (_glo && _glo['timezone']) {
             _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
-            _value = getDateFormat(value, utc ? utc : _glo['timezone'], _format);
+            _value = getDateFormat(value, utc ? utc : _glo['timezone'], resultType ? _format : null);
         }
     });
+    _format = _format && _format.replace("TT", "A").replace("tt", "a").trim();
     return { value: _value, format: _format };
 };
 var getStrUtcNum = function getStrUtcNum() {
@@ -17062,6 +17074,10 @@ var getDateFormatString = function getDateFormatString(value, valueUtc) {
     var format = arguments[3];
 
     if (!value) return null;
+    // format = format && format.replace("TT","A").replace("tt","a").trim();
+    // let t = format && format.indexOf("a") !==-1?"":"a";
+    // t = format && format.indexOf("A") !==-1?"":"A";
+    // dafaultTimeDateFormat = t?dafaultTimeDateFormat+" "+t:dafaultTimeDateFormat;
     var _value = format ? (0, _moment2.default)(value, format).format(dafaultTimeDateFormat) : value; //(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value, valueUtc, utc);
     _value = format ? (0, _moment2.default)(_value).format(format) : _value;
@@ -17090,10 +17106,12 @@ var getGlobalizationDateFormatString = function getGlobalizationDateFormatString
         }
         if (_glo && _glo['timezone']) {
             _format = _format && _format.replace("yyyy", "YYYY").replace("dd", "DD");
+            _format = _format && _format.replace("TT", "A").replace("tt", "a").trim();
             value = getDateFormatString(value, valueUtc ? valueUtc : _glo['timezone'], utc ? utc : _glo['timezone'], _format);
         }
         if (toFormat) {
             toFormat = toFormat && toFormat.replace("yyyy", "YYYY").replace("dd", "DD");
+            toFormat = toFormat && toFormat.replace("TT", "A").replace("tt", "a");
         }
         value = value && toFormat ? (0, _moment2.default)(value, _format).format(toFormat) : value;
     });
@@ -17106,17 +17124,18 @@ var getGlobalizationDateFormatString = function getGlobalizationDateFormatString
  * @param {*} value 
  * @param {*} resultType  返回数据类型
  */
-var getGlobalizationTimeFormat = function getGlobalizationTimeFormat(value, utc) {
-    var resultType = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+var getGlobalizationTimeFormat = function getGlobalizationTimeFormat(value, valueUtc, utc) {
+    var resultType = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
-    var _value = resultType ? value : (0, _moment2.default)(value);
+    var _value = value; //resultType?value:moment(value);
     var _format = null;
     globalizationDateFormat(function (_glo) {
         _format = _glo && _glo.dataformat ? _glo.dataformat.timeFormat : null;
         if (_glo && _glo['timezone']) {
-            _value = getTimeFormat(value, utc ? utc : _glo['timezone'], _format, resultType).value;
+            _value = getTimeFormat(value, valueUtc, utc ? utc : _glo['timezone'], _format, resultType).value;
         }
     });
+    _format = _format && _format.replace("TT", "A").replace("tt", "a").trim();
     return { value: _value, format: _format };
 };
 
@@ -17165,7 +17184,6 @@ var getjDiworkGlobalization = function getjDiworkGlobalization(don) {
         return don(null);
     }
 };
-
 /**
  * 把当前时间字符串 转 制定格式字符串
  * @param {*} value 
@@ -17177,13 +17195,13 @@ var getFromatToFormat = function getFromatToFormat(value, valueFormat, toFormat)
 };
 exports.initJDiwork = initJDiwork;
 exports.getFormatNumber = getFormatNumber;
+exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
+exports.getFromatToFormat = getFromatToFormat;
 exports.getDateFormat = getDateFormat;
 exports.getTimeFormat = getTimeFormat;
 exports.getGlobalizationDateFormat = getGlobalizationDateFormat;
 exports.getGlobalizationTimeFormat = getGlobalizationTimeFormat;
 exports.getGlobalizationDateFormatString = getGlobalizationDateFormatString;
-exports.getGlobalizationFormatNumber = getGlobalizationFormatNumber;
-exports.getFromatToFormat = getFromatToFormat;
 ;
 
 (function () {

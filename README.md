@@ -34,7 +34,7 @@
   <script src="//design.yonyoucloud.com/static/tinper-bee/latest/ac-format/dist/index.js"></script>
 ```
 
-### 转换规则如下 
+### 多格式 转换规则如下 
 
 
 分量 | 数字的显示方式 | 示例
@@ -50,6 +50,13 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 ( | 前缀，使用这个符号代表负数需要用括号来表示，与+不能同时出现 | -3.14表示成(3.14)
 \+ | 正负号的符号位，与(不能同时出现 | + ###，###[.]#### |
 
+### 多时区转换格式如下(详细介绍)
+>https://uap.wiki.yonyou.com/pages/viewpage.action?pageId=96698548
+
+分量 | 数字的显示方式 | 示例
+-- | -- | --|
+|TT| 大写进制周期标志（12小时AM/PM） 只有当指定了12小时h（例如，hh TT）时，才能使用此分量。| 8:01 AM 08:01:01.02 PM |
+|TTTT|本地化的进制周期标志（12小时 上午/下午）只有当指定了12小时h（例如，hh TTT）时，才能使用此分量|上午 8:01 下午 08:01:01.02|
 
 ###  示例
 
@@ -69,17 +76,33 @@ E | 科学计数法，根据前面的表达式计算有效位数，将结果按�
 ```
 
 ## API
-
 |API|说明|类型|默认值/参数|
 |:--|:---:|:--:|---:|
 initJDiwork             | 获取上下文，在项目初始化的时候调用 | function(don) | 把业务逻辑写在回调中，必须有上下文，否则项目上给默认值 |
 getFormatNumber |多格式转换   |function(格式,值)| - | 
 getDateFormat  |多时区，转moment对象|function(值,时区,格式)|- |
-getTimeFormat  |多时区，转string 显示对象  |function(值,时区,格式,返回值)| -|
+getTimeFormat  |多时区，转string 显示对象  |function(值,值对应的时区,时区,格式,返回值)| -|
 getGlobalizationFormatNumber|获取上下文设置多格式  |function(value)|- |
 getGlobalizationDateFormatString|时区、格式 互转，省略值会从上下文获取 |function(value,valueUtc,utc,dateType,gloformat,toFormat)| 详细使用见demo4 |
-getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker |function(value,dateType,utc,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
-getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,utc,resultType)|- |
+getGlobalizationDateFormat|通过上下文设置 datePicker/dateTimePicker |function(value,utc,dateType,format,resultType)|dateType 转换类型,是date、还是dateTime【"YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"】、resultType  返回数据类型 | 
+getGlobalizationTimeFormat|通过上下文设置 timePacker  |function(value,valueUtc,utc,resultType)|- |
+
+
+API 参数字段注解
+
+```js
+
+ 1. valueUtc 指 当前字符串的时区。
+
+ 2. utc 指 上下问的时区，也可以自己指定时区(缺省值是上下文时区)。
+
+ 3. dateType 当前需要转的类型 datePicker/dateTimePicker。
+
+ 4. gloformat 当前数据的格式(缺省值是获取上下文的格式)。
+
+ 5. toFormat 指定转出数据的格式(缺省值会自动获取上下文的格式。此字段建议按照数据能存储的字段进行)
+
+```
 
 多格式
 
@@ -149,7 +172,7 @@ jDiwork 加载方式二
 import { initJDiwork } from ac-format;
 ```
 
-所以例子都有github的demo 为准
+### 所以例子都有github的demo 为准
 
 ```js
 
