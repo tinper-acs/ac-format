@@ -6,7 +6,7 @@ const numberFormat = '0000000000000';
 const strFormat = '#############';
 const defaultUtc = 8;
 const dafaultDateFormat = 'YYYY-MM-DD';
-const dafaultTimeDateFormat = dafaultDateFormat+" HH:mm:ss";
+let dafaultTimeDateFormat = dafaultDateFormat+" HH:mm:ss";
 
 moment.updateLocale('zh-cn', {
     meridiem : function (hour, minute, isLowercase) {
@@ -234,6 +234,10 @@ const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
  */
 const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
     if (!value) return null;
+    // format = format && format.replace("TT","A").replace("tt","a").trim();
+    // let t = format && format.indexOf("a") !==-1?"":"a";
+    // t = format && format.indexOf("A") !==-1?"":"A";
+    // dafaultTimeDateFormat = t?dafaultTimeDateFormat+" "+t:dafaultTimeDateFormat;
     let _value = format?moment(value,format).format(dafaultTimeDateFormat):value;//(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value,valueUtc,utc);
     _value = format?moment(_value).format(format):_value;
@@ -262,10 +266,12 @@ const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat 
         }
         if(_glo && _glo['timezone']){
             _format = _format && _format.replace("yyyy","YYYY").replace("dd","DD");
+            _format = _format && _format.replace("TT","A").replace("tt","a").trim();
             value = getDateFormatString(value,valueUtc?valueUtc:_glo['timezone'],utc?utc:_glo['timezone'],_format);
         }
         if(toFormat){
             toFormat = toFormat && toFormat.replace("yyyy","YYYY").replace("dd","DD");
+            toFormat = toFormat && toFormat.replace("TT","A").replace("tt","a");
         }
         value = value && toFormat?moment(value,_format).format(toFormat):value;
     });

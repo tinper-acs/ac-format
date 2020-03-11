@@ -11,18 +11,18 @@ class Demo4 extends Component {
     constructor(props){
         super(props);
 
-        // window.globalization = {
-        //     timezone: 'UTC+07:00',
-        //     locale: 'zh_CN',
-        //     dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss'}
-        // }
+        window.globalization = {
+            timezone: 'UTC+07:00',
+            locale: 'zh_CN',
+            dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss TT', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss TT'}
+        }
         this.state = {
             value:'2020-02-06 14:30:06'
         }
     }
 
     render() {
-        let toFormat = 'YYYY-MM-DD HH:mm:ss';
+        let toFormat = 'YYYY-MM-DD HH:mm:ss TT';
         let utc8 = "UTC+08:00";
 
         let  {value:__value} = getGlobalizationDateFormatString(this.state.value,"UTC+07:00",utc8,'datetime',toFormat,toFormat);
