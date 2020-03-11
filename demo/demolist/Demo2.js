@@ -1,6 +1,6 @@
 /**
  *
- * @title DatePicker、Timepicker 时区 格式化
+ * @title DatePicker、Timepicker 时区 格式化 设置多语
  * @description 根据多时区普通调用转换时间 getDateFormat,getTimeFormat,配合moment对象使用
  *
  */
@@ -8,10 +8,11 @@ import React, { Component } from 'react';
 import {getDateFormat,getTimeFormat } from '../../src/index';
 import DatePicker from "bee-datepicker";
 import Timepicker from "bee-timepicker";
-
+import enUS from "bee-datepicker/build/locale/en_US";
+import moment from 'moment';
 const format = "YYYY-MM-DD HH:mm:ss TT";
 const dateInputPlaceholder = "选择日期";
-
+moment.locale('en');
 class Demo2 extends Component {
 
     constructor(props){
@@ -37,13 +38,15 @@ class Demo2 extends Component {
 
         return (
             <div>
-                {this.state.value}(UTC+09:00) :[编辑态]
+                {this.state.value}(UTC+09:00) :[编辑态]{format} 
                 <DatePicker
                     format={format.replace("TT","A").replace("tt","a")} 
                     onChange={this.onChange}
-                    value={showValue} 
-                    showTime={true} 
-                />
+                    value={showValue}
+                    showTime={true}
+                    locale={enUS}
+                /> 
+
                 <br/><br/>
 
                 {this.state.value}(UTC-10:00) :[浏览态]  
