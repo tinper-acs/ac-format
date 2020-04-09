@@ -123,7 +123,7 @@ dateTpicker
 import {  getDateFormat } from ac-format;
 
 render(){
-  let d = '2020/02/06,14:30:06';
+  let d = '2020/02/06 14:30:06';
   value={getDateFormat(d,"UTC-10:00")}
   //返回Moment对象
   value={getDateFormat(d,"UTC-10:00")}
@@ -178,7 +178,7 @@ import { initJDiwork } from ac-format;
 
 import {  getGlobalizationDateFormat,getGlobalizationTimeFormat,getGlobalizationDateFormatString } from ac-format;
  
-let d = '2020/02/06,14:30:06'; 
+let d = '2020/02/06 14:30:06'; 
 
 //转东八区时间
 value = getGlobalizationDateFormat(d,datetime,"UT+8:00",true)

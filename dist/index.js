@@ -16919,6 +16919,18 @@ var getNegative = function getNegative(format, value) {
     }
 };
 
+// getFullNum = (num,)=>{
+//     //处理非数字
+//     if(isNaN(num)){return num};
+
+//     //处理不需要转换的数字
+//     var str = ''+num;
+//     if(!/e/i.test(str)){return num;};
+//     let _precision = this.props.precision?this.props.precision:18;
+//     return (Number(num)).toFixed(_precision).replace(/\.?0+$/, "");
+// }
+
+
 var getFormatNumber = function getFormatNumber(value, format) {
     if (!value || value === "") return value;
     if (Number(value) === 0) return value;
@@ -16952,9 +16964,11 @@ var getDateFormat = function getDateFormat(value) {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy", "YYYY").replace("dd", "DD");
+        format = format && format.indexOf("TT") != -1 ? format.replace("HH", "hh") : format;
         format = format && format.replace("TT", "A").replace("tt", "a").trim();
-        format = format && format.replace("hh", "HH"); //所有的时间，都按照24小时制来处理。
-        return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)).format(format);
+        // format = format && format.replace("hh","HH");//所有的时间，都按照24小时制来处理。
+        var t = (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc)).format(format);
+        return t;
     } else {
         return (0, _moment2.default)(value).utcOffset(getOffsetMinute(utc));
     }
@@ -17052,6 +17066,7 @@ var getDateUTCString = function getDateUTCString(value) {
     var utc = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'UTC+08:00';
 
     if (!value) return value;
+    value = (0, _moment2.default)(value).format(dafaultTimeDateFormat); //去掉PM/AM 或者值中的其他字符
     var d = new Date(value);
     var hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
     if (hours < 0) {
@@ -17271,6 +17286,19 @@ function getIndex(mask) {
 	return mask.search(maskRegex);
 }
 
+function getFullNum(num) {
+	//处理非数字
+	if (isNaN(num)) {
+		return num;
+	};
+	//处理不需要转换的数字
+	var str = '' + num;
+	if (!/e/i.test(str)) {
+		return num;
+	};
+	return Number(num).toFixed(18).replace(/\.?0+$/, "");
+}
+
 function processMask() {
 	var mask = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "#.##";
 
@@ -17322,8 +17350,9 @@ function processValue(value, maskObj, options) {
 	// Fix the decimal first, toFixed will auto fill trailing zero.
 	valObj.value = Number(valObj.value).toFixed(maskObj.fraction && maskObj.fraction.length);
 	// Convert number to string to trim off *all* trailing decimal zero(es)
+	// valObj.value = String(valObj.value).indexOf("e") !== -1?getFullNum(valObj.value):Number(valObj.value).toString();
 	valObj.value = Number(valObj.value).toString();
-
+	valObj.value = valObj.value.indexOf("e") !== -1 ? getFullNum(valObj.value) : valObj.value;
 	// Fill back any trailing zero according to format
 	// look for last zero in format
 	var posTrailZero = maskObj.fraction && maskObj.fraction.lastIndexOf("0");
@@ -17421,6 +17450,7 @@ module.exports = function (mask, value) {
 	reactHotLoader.register(maskRegex, "maskRegex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
 	reactHotLoader.register(notMaskRegex, "notMaskRegex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
 	reactHotLoader.register(getIndex, "getIndex", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
+	reactHotLoader.register(getFullNum, "getFullNum", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
 	reactHotLoader.register(processMask, "processMask", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
 	reactHotLoader.register(processValue, "processValue", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
 	reactHotLoader.register(addSeparators, "addSeparators", "/Users/jony/workspaces/yonyou/lang/ac-format/src/formatNumber/index.js");
