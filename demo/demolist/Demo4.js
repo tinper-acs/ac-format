@@ -24,6 +24,8 @@ class Demo4 extends Component {
     render() {
         let toFormat = 'YYYY-MM-DD HH:mm:ss TT';
         let utc8 = "UTC+08:00";
+        //TODO 没有上下文的时区的时候，指定转换不对(设置一个上下文时区)。
+        console.log("************",getGlobalizationDateFormatString('2020-04-04 14:00:03', 'UTC+08:00', 'UTC+07:00', 'datetime', 'YYYY-MM-DD hh:mm:ss', 'YYYY-MM-DD hh:mm:ss TT'))
 
         let  {value:__value} = getGlobalizationDateFormatString(this.state.value,"UTC+07:00",utc8,'datetime',toFormat,toFormat);
         let  {value:__value2,format} = getGlobalizationDateFormatString(__value,utc8,null,'datetime',toFormat,toFormat);

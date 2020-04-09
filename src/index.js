@@ -97,6 +97,18 @@ const getNegative = (format, value) => {
     }
 }
 
+// getFullNum = (num,)=>{
+//     //处理非数字
+//     if(isNaN(num)){return num};
+    
+//     //处理不需要转换的数字
+//     var str = ''+num;
+//     if(!/e/i.test(str)){return num;};
+//     let _precision = this.props.precision?this.props.precision:18;
+//     return (Number(num)).toFixed(_precision).replace(/\.?0+$/, "");
+// }
+
+
 const getFormatNumber = (value,format) => {
     if (!value || value === "") return value;
     if (Number(value) === 0) return value;
@@ -127,9 +139,11 @@ const getDateFormat = (value, utc = 'UTC+08:00', format) => {
     if (!value) return null;
     if (format) {
         format = format.replace("yyyy","YYYY").replace("dd","DD");
+        format = format && format.indexOf("TT") != -1?format.replace("HH","hh"):format;
         format = format && format.replace("TT","A").replace("tt","a").trim();
-        format = format && format.replace("hh","HH");//所有的时间，都按照24小时制来处理。
-        return moment(value).utcOffset(getOffsetMinute(utc)).format(format);
+        // format = format && format.replace("hh","HH");//所有的时间，都按照24小时制来处理。
+        let t = moment(value).utcOffset(getOffsetMinute(utc)).format(format);
+        return t;
     } else {
         return moment(value).utcOffset(getOffsetMinute(utc));
     }
@@ -215,6 +229,7 @@ const getStrUtcNum = (utc = 'UTC+08:00') =>{
  */
 const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
     if(!value)return value;
+    value = moment(value).format(dafaultTimeDateFormat);//去掉PM/AM 或者值中的其他字符
     const d = new Date(value);
     let hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
     if(hours < 0){

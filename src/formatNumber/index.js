@@ -7,6 +7,15 @@ function getIndex(mask) {
 	return mask.search(maskRegex);
 }
 
+function getFullNum (num) {
+	//处理非数字
+	if (isNaN(num)) { return num };
+	//处理不需要转换的数字
+	var str = '' + num;
+	if (!/e/i.test(str)) { return num; };
+	return (Number(num)).toFixed(18).replace(/\.?0+$/, "");
+}
+
 function processMask(mask = "#.##") {
 	const maskObj = {};
 	const len = mask.length;
@@ -56,8 +65,9 @@ function processValue(value, maskObj, options) {
 	// Fix the decimal first, toFixed will auto fill trailing zero.
 	valObj.value = Number(valObj.value).toFixed(maskObj.fraction && maskObj.fraction.length);
 	// Convert number to string to trim off *all* trailing decimal zero(es)
+	// valObj.value = String(valObj.value).indexOf("e") !== -1?getFullNum(valObj.value):Number(valObj.value).toString();
 	valObj.value = Number(valObj.value).toString();
-
+	valObj.value = valObj.value.indexOf("e") !== -1?getFullNum(valObj.value):valObj.value;
 	// Fill back any trailing zero according to format
 	// look for last zero in format
 	const posTrailZero = maskObj.fraction && maskObj.fraction.lastIndexOf("0");
