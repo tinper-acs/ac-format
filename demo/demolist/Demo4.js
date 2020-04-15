@@ -12,12 +12,12 @@ class Demo4 extends Component {
         super(props);
 
         window.globalization = {
-            timezone: 'UTC+07:00',
+            timezone: 'UTC-07:15',
             locale: 'zh_CN',
             dataformat: {dateTimeFormat: 'dd-MM-yyyy HH:mm:ss TT', numberFormat: '+# ### ### ### ### ###[,]########', dateFormat: 'MM-dd-yyyy', timeFormat: 'HH:mm:ss TT'}
         }
         this.state = {
-            value:'2020-02-06 14:30:06'
+            value:'2020-02-06 14:10:06'
         }
     }
 
@@ -25,7 +25,23 @@ class Demo4 extends Component {
         let toFormat = 'YYYY-MM-DD HH:mm:ss TT';
         let utc8 = "UTC+08:00";
         //TODO 没有上下文的时区的时候，指定转换不对(设置一个上下文时区)。
-        console.log("************",getGlobalizationDateFormatString('2020-04-04 14:00:03', 'UTC+08:00', 'UTC+07:00', 'datetime', 'YYYY-MM-DD hh:mm:ss', 'YYYY-MM-DD hh:mm:ss TT'))
+        console.log("*********9999999999***",getGlobalizationDateFormatString('2020-02-06 14:30:06', 'UTC+08:00', null, 'datetime', 'YYYY-MM-DD hh:mm:ss', 'YYYY-MM-DD hh:mm:ss TT'))
+
+        // let begindate = new Date(Date.parse('2020-04-04 14:10:06'.replace(/-/g, "/")));
+        // // let targetTimezone = 7
+        // // let _dif = new Date().getTimezoneOffset()
+        // // let east9time = begindate.getTime() + _dif * 60 * 1000 - (targetTimezone * 60 * 60 * 1000);
+        // // console.log("---east9time--",east9time);
+
+
+        // var timezone = 7.25; //目标时区时间，东八区
+        // var offset_GMT = begindate.getTimezoneOffset(); // 本地时间和格林威治的时间差，单位为分钟
+        // var nowDate = begindate.getTime(); // 本地时间距 1970 年 1 月 1 日午夜（GMT 时间）之间的毫秒数
+        // var targetDate = new Date(nowDate + offset_GMT * 60 * 1000 + timezone * 60 * 60 * 1000);
+
+
+        // console.log(" : "+moment(targetDate).format("YYYY-MM-DD HH:mm:ss"));
+
 
         let  {value:__value} = getGlobalizationDateFormatString(this.state.value,"UTC+07:00",utc8,'datetime',toFormat,toFormat);
         let  {value:__value2,format} = getGlobalizationDateFormatString(__value,utc8,null,'datetime',toFormat,toFormat);
@@ -52,7 +68,7 @@ class Demo4 extends Component {
         return (
             <div>
                 <h4>上下文 普通时区转换 </h4>
-
+{/* 
                 {this.state.value}(UTC+70:00 转 上下文) : {__value} <br/><br/>
 
                 {__value}(UTC+80:00 转 UTC+70:00) : {__value2} <br/><br/>
@@ -80,7 +96,7 @@ class Demo4 extends Component {
                 <h4>上下文 高级转换(MM-DD-YYYY) 零界值 </h4>
                 <span>格式为: {format6} 的 {value6} {utc8} 转成 {window.globalization && window.globalization.timezone} 区, 格式为: {toFormat} </span>
                 <span>值为: {newValue6}</span>
-
+ */}
             </div>
         );
     }

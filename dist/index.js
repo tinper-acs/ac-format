@@ -17049,9 +17049,11 @@ var getStrUtcNum = function getStrUtcNum() {
     utc = utc.toLocaleUpperCase();
     if (utc.indexOf("UTC") === -1 || utc.length !== 9) {
         console.log(" utc format is error ! " + utc);
-        return 'UTC+08:00';
+        return 8;
     }
-    return Number(utc.substring(3, 6));
+    var mintus = Number(utc.substring(3, 6));
+    mintus = mintus < 0 ? -1 : 1;
+    return Number(utc.substring(3, 6)) + Number(utc.split(":")[1]) / 60 * mintus;
 };
 
 /**
@@ -17067,15 +17069,22 @@ var getDateUTCString = function getDateUTCString(value) {
 
     if (!value) return value;
     value = (0, _moment2.default)(value).format(dafaultTimeDateFormat); //去掉PM/AM 或者值中的其他字符
-    var d = new Date(value);
-    var hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
-    if (hours < 0) {
-        d.setDate(d.getDate() - 1);
-        hours = hours + 24;
-    }
-    d.setHours(hours);
-    return d;
+    var _value = new Date(Date.parse(value.replace(/-/g, "/")));
+    var _valueOffset = getStrUtcNum(valueUtc) * -1 * 60;
+    return new Date(_value.getTime() + _valueOffset * 60 * 1000 + getStrUtcNum(utc) * 60 * 60 * 1000);
 };
+// const getDateUTCString_back = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
+//     if(!value)return value;
+//     value = moment(value).format(dafaultTimeDateFormat);//去掉PM/AM 或者值中的其他字符
+//     const d = new Date(value);
+//     let hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc)); 
+//     if(hours < 0){
+//         d.setDate(d.getDate() - 1);
+//         hours = hours+24
+//     }
+//     d.setHours(hours);
+//     return d;
+// }
 
 /**
  * 
@@ -17089,12 +17098,9 @@ var getDateFormatString = function getDateFormatString(value, valueUtc) {
     var format = arguments[3];
 
     if (!value) return null;
-    // format = format && format.replace("TT","A").replace("tt","a").trim();
-    // let t = format && format.indexOf("a") !==-1?"":"a";
-    // t = format && format.indexOf("A") !==-1?"":"A";
-    // dafaultTimeDateFormat = t?dafaultTimeDateFormat+" "+t:dafaultTimeDateFormat;
     var _value = format ? (0, _moment2.default)(value, format).format(dafaultTimeDateFormat) : value; //(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value, valueUtc, utc);
+    format = format && format.replace("hh", "HH");
     _value = format ? (0, _moment2.default)(_value).format(format) : _value;
     return _value;
 };
