@@ -114,15 +114,16 @@ const getFormatNumber = (value,format) => {
     if (Number(value) === 0) return value;
 
     let b = String(value).indexOf('-') != -1 ? true : false;//标记负数
-
+    let decimal = String(value).indexOf(".")?String(value).split(".")[1]:null;
     let _format = getPrecFormat(format, String(value), b);
     value = b ? String(Number(String(value).replace('-', "")) * (-1)) : String(value);
     format = format.replace("(", "+");//规范负数
 
     _format = _format.replace("[", "").replace("]", "");//规范分隔符
     _format = _format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "").replace(" ", "");
+  
     value = formatnumber(_format, value);
-
+    value = Number(decimal) ===0?value+"."+decimal:value;//处理100.00的数据
     let nage = getNegative(format, value);
     return nage;
 }

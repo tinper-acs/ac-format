@@ -36,6 +36,8 @@ class Demo1 extends Component {
 
     render() {
         // const {value,value1,value2,value3} = this.state;
+        let _v = getFormatNumber('-1000.0000', '#,###,###.###,###,###[.]########+');
+        console.log("_v ",_v);
         return (
             <div className="demoPadding">
                 <span>示例</span>
@@ -49,7 +51,7 @@ class Demo1 extends Component {
                      
                      onFocus={(value, e) => this.setState({ value })}
                      onBlur={(value, e) =>this.setState({ value })}
-                     /> <br />
+                     /> <br /> 
  
                     (#,####,####[,]#### +
                      <InputNumber iconStyle="one"
