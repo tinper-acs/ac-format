@@ -16936,7 +16936,7 @@ var getFormatNumber = function getFormatNumber(value, format) {
     if (Number(value) === 0) return value;
 
     var b = String(value).indexOf('-') != -1 ? true : false; //标记负数
-    var decimal = String(value).indexOf(".") ? String(value).split(".")[1] : null;
+    // let decimal = String(value).indexOf(".")?String(value).split(".")[1]:null;
     var _format = getPrecFormat(format, String(value), b);
     value = b ? String(Number(String(value).replace('-', "")) * -1) : String(value);
     format = format.replace("(", "+"); //规范负数
@@ -16945,7 +16945,7 @@ var getFormatNumber = function getFormatNumber(value, format) {
     _format = _format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "").replace(" ", "");
 
     value = (0, _formatNumber2.default)(_format, value);
-    value = Number(decimal) === 0 ? value + "." + decimal : value; //处理100.00的数据
+    // value = Number(decimal) ===0?value+"."+decimal:value;//处理100.00的数据
     var nage = getNegative(format, value);
     return nage;
 };

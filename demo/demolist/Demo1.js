@@ -42,7 +42,7 @@ class Demo1 extends Component {
             <div className="demoPadding">
                 <span>示例</span>
                 <div>
-                    + ###,###[.]####
+                    ####.####[,]#### +
                      <InputNumber iconStyle="one"
                         min = '-9007199254740990'
                         max = '9007199254740990'
@@ -53,7 +53,7 @@ class Demo1 extends Component {
                      onBlur={(value, e) =>this.setState({ value })}
                      /> <br /> 
  
-                    (#,####,####[,]#### +
+                    ####.####[,]#### +
                      <InputNumber iconStyle="one"
                         min = '-9007199254740990'
                         max = '9007199254740990'
@@ -63,7 +63,7 @@ class Demo1 extends Component {
                      onBlur={(value7, e) =>this.setState({ value7 })}
                      /> <br />
 
-                    ####,####,####[.]####### +
+                    ####,####,####[.]########### +
                     <InputNumber iconStyle="one" value={this.state.value1} 
                     format={value => getFormatNumber(value,"####,####,####[.]########### +")}
                     minusRight={true}
