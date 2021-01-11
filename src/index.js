@@ -20,7 +20,7 @@ moment.updateLocale('zh-cn', {
 
 /**
  * 千分位的数量
- * @param {*} format  
+ * @param {*} format
  */
 const getPrecisionLen = (format) => {
     if (format.indexOf("[") === -1) return format;
@@ -40,7 +40,7 @@ const getPrecisionLen = (format) => {
 
 /**
  * 处理0.x,或负数
- * @param {} format 
+ * @param {} format
  */
 const getDecimalFormat = (format, decimal, _precFormatStr) => {
     let lenStr = String(format.split("[")[0]),
@@ -55,7 +55,7 @@ const getDecimalFormat = (format, decimal, _precFormatStr) => {
     // "0,####.000"
     return "0" + precDec + _prStr + _precFormatStr;
 }
-/** 
+/**
  * 根据数值，format格式
 */
 const getPrecFormat = (format, value, b) => {
@@ -70,14 +70,15 @@ const getPrecFormat = (format, value, b) => {
     let _precFormatStr = numberFormat.substring(0, precV.length);//获取小数位的格式字符
 
     if (String(value).replace("-", "").substring(0, 1) === "0") {//处理0.x的数据
-        return "0." + _precFormatStr;
+        let splitStr = format[sp -1];
+        return "0" + splitStr + _precFormatStr;
         //return getDecimalFormat(format,getPrecisionLen(format),_precFormatStr);
     }
     return format.substring(0, sp + 1) + _precFormatStr + r;
     // return format.substring(0,sp+1)+numberFormat.substring(0,precV.length)+r;
 }
 
-/** 
+/**
  * 判断value、format 负数左右。
  * 负数在右边，返回是个字符串
 */
@@ -100,7 +101,7 @@ const getNegative = (format, value) => {
 // getFullNum = (num,)=>{
 //     //处理非数字
 //     if(isNaN(num)){return num};
-    
+
 //     //处理不需要转换的数字
 //     var str = ''+num;
 //     if(!/e/i.test(str)){return num;};
@@ -121,7 +122,7 @@ const getFormatNumber = (value,format) => {
 
     _format = _format.replace("[", "").replace("]", "");//规范分隔符
     _format = _format.replace(" +", "").replace("+", "").replace("+ ", "").replace("+", "").replace("(", "").replace(" ", "");
-  
+
     value = formatnumber(_format, value);
     // value = Number(decimal) ===0?value+"."+decimal:value;//处理100.00的数据
     let nage = getNegative(format, value);
@@ -151,11 +152,11 @@ const getDateFormat = (value, utc = 'UTC+08:00', format) => {
 }
 
 /**
- * 处理时分秒的数据。 
- * @param {*} value 
- * @param {*} utc 
+ * 处理时分秒的数据。
+ * @param {*} value
+ * @param {*} utc
  * @param {*} format  必须是24小时制，进行处理。
- * @param {*} resultType 
+ * @param {*} resultType
  */
 const getTimeFormat = (value,valueUtc = 'UTC+08:00', utc = 'UTC+08:00', format ="HH:mm:ss",resultType) => {
   if(value.indexOf(":") === -1)return value;
@@ -190,7 +191,7 @@ const globalizationDateFormat = (result) => {
 
 /**
  * 根据时区转换 "YYYY-MM-DD"/"YYYY-MM-DD HH:mm:ss",默认 "YYYY-MM-DD"
- * @param {*} value 
+ * @param {*} value
  * @param {*} dateType 转换类型,是date、还是dateTime
  * @param {*} resultType  返回数据类型
  */
@@ -228,7 +229,7 @@ const getStrUtcNum = (utc = 'UTC+08:00') =>{
  * @param {*} value 字符串类型
  * @param {*} valueUtc 已知时区
  * @param {*} utc   转换时区
- * @param {*} resultType 
+ * @param {*} resultType
  */
 const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
     if(!value)return value;
@@ -241,7 +242,7 @@ const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
 //     if(!value)return value;
 //     value = moment(value).format(dafaultTimeDateFormat);//去掉PM/AM 或者值中的其他字符
 //     const d = new Date(value);
-//     let hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc)); 
+//     let hours = d.getHours() - (getStrUtcNum(valueUtc) - getStrUtcNum(utc));
 //     if(hours < 0){
 //         d.setDate(d.getDate() - 1);
 //         hours = hours+24
@@ -251,14 +252,14 @@ const getDateUTCString = (value,valueUtc = 'UTC+08:00' ,utc = 'UTC+08:00') =>{
 // }
 
 /**
- * 
- * @param {*} value 
- * @param {*} valueUtc 
- * @param {*} utc 
+ *
+ * @param {*} value
+ * @param {*} valueUtc
+ * @param {*} utc
  * @param {*} format 当前数据的格式(DD.MM / MM.DD 无法区分)
  */
 const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
-    if (!value) return null; 
+    if (!value) return null;
     let _value = format?moment(value,format).format(dafaultTimeDateFormat):value;//(DD.MM / MM.DD 无法区分)需要先按照format格式化成标准字符串,在进行换算
     _value = getDateUTCString(_value,valueUtc,utc);
     format =  format && format.replace("hh","HH");
@@ -268,9 +269,9 @@ const getDateFormatString = (value,valueUtc, utc = 'UTC+08:00',format) => {
 
 /**
  * 输入时间字符串,告知时区，转换成某个时区
- * @param {*} value 
+ * @param {*} value
  * @param {*} valueUtc 输入值的时区信息
- * @param {*} utc 
+ * @param {*} utc
  * @param {*} resultType datetime 是否带有年、月、日 时、分、秒
 * @param {*} format 上下文时间格式化字符(可忽略)
 * @param {*} toFormat 需要转换出来的格式化时间,默认按照上下文输出即可
@@ -304,7 +305,7 @@ const getGlobalizationDateFormatString = (value,valueUtc,utc,dateType,gloformat 
 
 /**
  * 根据时区转换 'H:mm:ss'
- * @param {*} value 
+ * @param {*} value
  * @param {*} resultType  返回数据类型
  */
 const getGlobalizationTimeFormat = (value,valueUtc,utc,resultType = null) => {
@@ -359,16 +360,16 @@ const getjDiworkGlobalization = (don) => {
     if(window.globalization && window.globalization.dataformat){
         return don(window.globalization);
     }
-    if (!window.jDiwork || !window.jDiwork.getContext) { 
+    if (!window.jDiwork || !window.jDiwork.getContext) {
         console.log("jDiwork.getContext 不存在 !");
         return don(null);
     }
 }
 /**
  * 把当前时间字符串 转 制定格式字符串
- * @param {*} value 
- * @param {*} valueFormat 
- * @param {*} toFormat 
+ * @param {*} value
+ * @param {*} valueFormat
+ * @param {*} toFormat
  */
 const getFromatToFormat = (value,valueFormat,toFormat) => {
    return moment(value,valueFormat).format(toFormat);
