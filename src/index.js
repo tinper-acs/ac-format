@@ -112,7 +112,7 @@ const getNegative = (format, value) => {
 
 const getFormatNumber = (value,format) => {
     if (!value || value === "") return value;
-    if (Number(value) === 0) return value;
+    // if (Number(value) === 0) return value;
 
     let b = String(value).indexOf('-') != -1 ? true : false;//标记负数
     // let decimal = String(value).indexOf(".")?String(value).split(".")[1]:null;
